@@ -1,0 +1,244 @@
+/* ============================================================
+   CINNAMON SERVICES — CAMADA DE SITE
+   Só composições de página. Todo token, cor, tipografia e
+   componente base vem de cinnamon.css (o design system).
+   ============================================================ */
+
+/* ---------------------------------------------------------------
+   S0. PLACEHOLDER
+   Marcação visível para tudo que ainda precisa de dado real.
+   Some da página inteira quando as classes forem removidas.
+   --------------------------------------------------------------- */
+.ph{
+  font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;line-height:1.5;
+  color:var(--azure-300);background:rgba(76,126,243,.07);
+  border:1px dashed rgba(76,126,243,.42);border-radius:6px;
+  padding:3px 9px;display:inline-block;text-transform:none;vertical-align:middle
+}
+.ph--block{display:block;padding:12px 14px;font-size:.68rem;line-height:1.7;color:var(--muted)}
+.ph--fig{
+  font-family:var(--sans);font-weight:500;font-size:clamp(1.6rem,3.2vw,2.6rem);
+  letter-spacing:-.03em;padding:6px 14px;color:var(--azure-300)
+}
+
+/* ---------------------------------------------------------------
+   S1. NAVEGAÇÃO MOBILE
+   O DS esconde .topnav abaixo de 1024px sem oferecer substituto.
+   --------------------------------------------------------------- */
+.nav-toggle{
+  display:none;width:44px;height:44px;border-radius:12px;border:1px solid var(--line);
+  background:rgba(17,26,43,.5);color:var(--text);cursor:pointer;
+  place-items:center;transition:all var(--d-base) var(--ease)
+}
+.nav-toggle:hover{border-color:var(--azure);color:#fff}
+.nav-drawer{
+  position:fixed;inset:0;z-index:70;display:flex;flex-direction:column;
+  background:rgba(10,11,13,.94);backdrop-filter:blur(22px);
+  padding:clamp(88px,14vh,120px) clamp(20px,6vw,48px) 40px;
+  opacity:0;pointer-events:none;transform:translateY(-14px);
+  transition:opacity var(--d-base) var(--ease),transform var(--d-slow) var(--ease-expo)
+}
+.nav-drawer.open{opacity:1;pointer-events:auto;transform:translateY(0)}
+.nav-drawer a{
+  font-family:var(--sans);font-weight:500;font-size:clamp(1.5rem,6.4vw,2.2rem);
+  letter-spacing:-.03em;color:var(--text);padding:13px 0;
+  border-bottom:1px solid var(--line-soft);display:flex;align-items:baseline;gap:16px;
+  transition:color var(--d-base) var(--ease),padding-left var(--d-base) var(--ease)
+}
+.nav-drawer a:hover{color:var(--azure-300);padding-left:10px}
+.nav-drawer a span{font-family:var(--mono);font-size:.62rem;letter-spacing:.2em;color:var(--faint)}
+.nav-drawer .drawer-foot{margin-top:auto;padding-top:28px;display:flex;flex-direction:column;gap:16px}
+body.nav-open{overflow:hidden}
+
+/* ---------------------------------------------------------------
+   S2. MÉTRICAS DO HERO
+   --------------------------------------------------------------- */
+.metrics{
+  display:grid;grid-template-columns:repeat(4,1fr);position:relative;z-index:2;
+  background:var(--ink);border-bottom:1px solid var(--line-soft)
+}
+.metric{
+  position:relative;padding:clamp(26px,3vw,40px) clamp(20px,2.6vw,34px);
+  border-left:1px solid var(--line-soft);overflow:hidden;
+  transition:background var(--d-slow) var(--ease)
+}
+.metric:first-child{border-left:none}
+.metric::before{
+  content:'';position:absolute;top:0;left:-1px;width:1px;height:0;
+  background:linear-gradient(180deg,var(--azure),transparent);
+  transition:height var(--d-slow) var(--ease-expo)
+}
+.metric:hover{background:rgba(76,126,243,.045)}
+.metric:hover::before{height:100%}
+.metric-fig{
+  font-family:var(--sans);font-weight:500;font-size:clamp(2rem,3.6vw,3rem);
+  letter-spacing:-.04em;line-height:1;color:var(--text);display:block;margin-bottom:12px
+}
+.metric-label{
+  font-family:var(--mono);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--muted);line-height:1.6;display:block
+}
+
+/* ---------------------------------------------------------------
+   S3. FAIXA DE CLIENTES
+   --------------------------------------------------------------- */
+.logos{
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:center;
+  gap:clamp(20px,4vw,58px);padding:clamp(26px,3vw,38px) 0
+}
+.logo-slot{
+  display:grid;place-items:center;min-width:132px;height:44px;padding:0 18px;
+  border:1px dashed rgba(76,126,243,.28);border-radius:10px;
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--faint);transition:all var(--d-base) var(--ease)
+}
+.logo-slot:hover{border-color:rgba(76,126,243,.6);color:var(--azure-300);transform:translateY(-3px)}
+
+/* ---------------------------------------------------------------
+   S4. CASES
+   --------------------------------------------------------------- */
+.case{
+  position:relative;overflow:hidden;display:flex;flex-direction:column;
+  border:1px solid var(--line);border-radius:18px;background:var(--navy);
+  padding:clamp(24px,2.8vw,32px);transition:all var(--d-slow) var(--ease-expo)
+}
+.case::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;z-index:2;
+  background:linear-gradient(90deg,var(--azure),var(--bordo));
+  transform:scaleX(0);transform-origin:left;transition:transform var(--d-slow) var(--ease-expo)}
+.case::after{content:'';position:absolute;inset:0;pointer-events:none;opacity:0;
+  transition:opacity var(--d-slow) var(--ease);
+  background:radial-gradient(circle at 75% 0%,var(--azure-soft),transparent 62%)}
+.case:hover{transform:translateY(-6px);border-color:rgba(76,126,243,.45);box-shadow:var(--sh-3)}
+.case:hover::before{transform:scaleX(1)}
+.case:hover::after{opacity:1}
+.case-tag{
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--faint);margin-bottom:22px;display:block;position:relative;z-index:2
+}
+.case h3{font-family:var(--sans);font-weight:600;font-size:1.35rem;letter-spacing:-.025em;
+  margin-bottom:12px;position:relative;z-index:2}
+.case p{font-size:.9rem;line-height:1.65;color:var(--muted);position:relative;z-index:2}
+.case-foot{
+  margin-top:auto;padding-top:22px;display:flex;align-items:center;justify-content:space-between;
+  gap:14px;position:relative;z-index:2
+}
+.case-arrow{color:var(--azure);opacity:.4;transition:all var(--d-slow) var(--ease)}
+.case:hover .case-arrow{opacity:1;transform:translate(4px,-4px)}
+
+/* ---------------------------------------------------------------
+   S5. BIOS DO TIME
+   --------------------------------------------------------------- */
+.bio{
+  border:1px solid var(--line);border-radius:18px;background:var(--navy-2);
+  padding:clamp(24px,2.8vw,30px);transition:all var(--d-slow) var(--ease-expo)
+}
+.bio:hover{transform:translateY(-5px);border-color:rgba(76,126,243,.45);box-shadow:var(--sh-2)}
+.bio-avatar{
+  width:64px;height:64px;border-radius:50%;display:grid;place-items:center;margin-bottom:20px;
+  border:1px solid var(--line);background:linear-gradient(180deg,var(--navy-3),var(--navy-2));
+  font-family:var(--editorial);font-style:italic;font-size:1.5rem;color:var(--azure-300);
+  transition:all var(--d-slow) var(--ease-spring)
+}
+.bio:hover .bio-avatar{border-color:var(--azure);box-shadow:0 0 22px var(--azure-glow);transform:scale(1.05)}
+.bio h3{font-family:var(--sans);font-weight:600;font-size:1.2rem;letter-spacing:-.02em;margin-bottom:4px}
+.bio .bio-role{
+  font-family:var(--mono);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--azure-300);display:block;margin-bottom:16px
+}
+.bio p{font-size:.88rem;line-height:1.65;color:var(--muted)}
+
+/* ---------------------------------------------------------------
+   S6. FAQ
+   --------------------------------------------------------------- */
+.faq{border-top:1px solid var(--line-soft)}
+.faq-item{border-bottom:1px solid var(--line-soft)}
+.faq-q{
+  width:100%;display:flex;align-items:flex-start;justify-content:space-between;gap:24px;
+  background:none;border:none;cursor:pointer;text-align:left;color:var(--text);
+  padding:clamp(20px,2.4vw,28px) 0;font-family:var(--sans);font-weight:500;
+  font-size:clamp(1.02rem,1.6vw,1.25rem);letter-spacing:-.015em;line-height:1.35;
+  transition:color var(--d-base) var(--ease),padding-left var(--d-base) var(--ease)
+}
+.faq-q:hover{color:var(--azure-300);padding-left:10px}
+.faq-icon{
+  width:32px;height:32px;border-radius:50%;border:1px solid var(--line);flex:none;
+  display:grid;place-items:center;color:var(--muted);margin-top:-2px;
+  transition:all var(--d-base) var(--ease-spring)
+}
+.faq-item.open .faq-icon{background:var(--azure);border-color:var(--azure-300);color:#fff;
+  transform:rotate(45deg);box-shadow:0 0 16px var(--azure-glow)}
+.faq-a{overflow:hidden;height:0;transition:height var(--d-slow) var(--ease-expo)}
+.faq-a-inner{padding:0 clamp(48px,7vw,80px) clamp(24px,3vw,32px) 0}
+.faq-a-inner p{font-size:.94rem;line-height:1.75;color:var(--muted);max-width:70ch}
+.faq-a-inner p + p{margin-top:14px}
+.faq-a-inner strong{color:var(--text);font-weight:600}
+
+/* ---------------------------------------------------------------
+   S7. CONTATO
+   --------------------------------------------------------------- */
+.contact-wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(28px,4vw,64px);align-items:start}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-grid .full{grid-column:1/-1}
+.form-field label{display:block;margin-bottom:8px}
+.form-note{display:flex;align-items:flex-start;gap:10px;margin-top:18px}
+.form-note svg{flex:none;margin-top:2px;color:var(--azure-300)}
+.contact-aside{
+  border:1px solid var(--line);border-radius:20px;padding:clamp(26px,3vw,36px);
+  background:linear-gradient(180deg,var(--navy),var(--navy-2));position:relative;overflow:hidden
+}
+.contact-aside::after{content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(circle at 90% 0%,var(--azure-soft),transparent 60%)}
+.agenda{list-style:none;display:flex;flex-direction:column;gap:18px;position:relative;z-index:2}
+.agenda li{display:flex;gap:14px;align-items:flex-start}
+.agenda .a-n{
+  font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;color:var(--azure);flex:none;
+  width:24px;padding-top:.25em
+}
+.agenda strong{display:block;color:var(--text);font-weight:600;font-size:.95rem;margin-bottom:3px}
+.agenda span.a-d{font-size:.85rem;color:var(--muted);line-height:1.6}
+
+/* ---------------------------------------------------------------
+   S8. RODAPÉ
+   --------------------------------------------------------------- */
+.foot-grid{display:grid;grid-template-columns:1.5fr repeat(3,1fr);gap:clamp(26px,4vw,56px)}
+.foot-col h4{
+  font-family:var(--mono);font-size:.6rem;font-weight:500;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--faint);margin-bottom:18px
+}
+.foot-col ul{list-style:none;display:flex;flex-direction:column;gap:11px}
+.foot-col a{font-size:.88rem;color:var(--muted);transition:color var(--d-base) var(--ease);display:inline-flex;gap:7px;align-items:center}
+.foot-col a:hover{color:var(--azure-300)}
+.foot-bottom{
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:18px;
+  margin-top:clamp(38px,5vw,64px);padding-top:26px;border-top:1px solid var(--line-soft)
+}
+
+/* ---------------------------------------------------------------
+   S9. UTILIDADES DE PÁGINA
+   --------------------------------------------------------------- */
+.rule{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-block:clamp(38px,5vw,64px)}
+.tag-inline{
+  font-family:var(--mono);font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;
+  border:1px solid var(--line);border-radius:6px;padding:3px 8px;color:var(--muted);white-space:nowrap
+}
+.tag-inline--now{border-color:rgba(76,126,243,.45);color:var(--azure-300);background:rgba(76,126,243,.07)}
+
+/* ---------------------------------------------------------------
+   S10. RESPONSIVO
+   --------------------------------------------------------------- */
+@media (max-width:1024px){
+  .nav-toggle{display:grid}
+  .metrics{grid-template-columns:repeat(2,1fr)}
+  .metric:nth-child(3){border-left:none}
+  .metric:nth-child(n+3){border-top:1px solid var(--line-soft)}
+  .contact-wrap{grid-template-columns:1fr}
+  .foot-grid{grid-template-columns:1fr 1fr}
+}
+@media (max-width:760px){
+  .metrics{grid-template-columns:1fr}
+  .metric{border-left:none}
+  .metric:nth-child(n+2){border-top:1px solid var(--line-soft)}
+  .form-grid{grid-template-columns:1fr}
+  .foot-grid{grid-template-columns:1fr}
+  .topbuy{display:none}
+}

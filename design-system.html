@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Cinnamon Services — Design System “Azure Nocturne”</title>
+<meta name="description" content="Design system vivo e biblioteca de padrões da Cinnamon Services: tokens, tipografia, cores, componentes, layout e movimento — reusando as classes reais do site."/>
+<meta name="theme-color" content="#0A0B0D"/>
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230A0B0D'/%3E%3Cg fill='%234C7EF3'%3E%3Ccircle cx='10' cy='11' r='1.7'/%3E%3Ccircle cx='16' cy='8' r='1.7'/%3E%3Ccircle cx='22' cy='12' r='1.7'/%3E%3Ccircle cx='12' cy='17' r='1.7'/%3E%3Ccircle cx='20' cy='18' r='1.7'/%3E%3C/g%3E%3Cg fill='%23A63348'%3E%3Ccircle cx='11' cy='23' r='1.7'/%3E%3Ccircle cx='17' cy='24' r='1.7'/%3E%3C/g%3E%3C/svg%3E"/>
+
+<!-- Fontes — mesma estratégia do site -->
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Instrument+Serif:ital@0;1&family=Syncopate:wght@400;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/@studio-freight/lenis@1.0.33/dist/lenis.min.js"></script>
+
+<!-- MESMO tailwind.config do site: fonte de verdade dos tokens de fonte/cor -->
+<script>
+tailwind.config = {
+  theme: { extend: {
+    colors: {
+      brand:  { ink:'#0A0B0D', navy:'#111A2B', navy2:'#0D1420', line:'#1E2E4A',
+                azure:'#4C7EF3', bordo:'#A63348', paper:'#F6F5F3' },
+      azure:  { 100:'#E4EDFF',200:'#C9DBFF',300:'#A8C4FF',400:'#7BA4FF',
+                500:'#4C7EF3',600:'#2E5BD0',700:'#1E3E93',900:'#16264F' },
+      bordo:  { 300:'#D98494',400:'#C25A70',500:'#A63348',600:'#7B1E32',700:'#5A1424',900:'#3A0C17' },
+      navy:   { 400:'#1E2E4A',500:'#16233A',600:'#111A2B',700:'#0D1420',900:'#0A0B0D' },
+    },
+    fontFamily: {
+      sans:['Manrope','system-ui','sans-serif'], serif:['Fraunces','Georgia','serif'],
+      editorial:['Instrument Serif','Georgia','serif'], display:['Syncopate','sans-serif'],
+      mono:['JetBrains Mono','monospace'],
+    }
+  }}
+};
+</script>
+
+<!-- MESMOS stylesheets do site — nada é reescrito aqui -->
+<link rel="stylesheet" href="assets/css/cinnamon.css"/>
+<link rel="stylesheet" href="assets/css/site.css"/>
+</head>
+
+<body>
+
+<!-- ======================= UTILIDADES GLOBAIS (idênticas ao site) ======================= -->
+<div class="scroll-progress" id="progress"></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="spotlight" id="spotlight" aria-hidden="true"></div>
+<div class="gradient-blur" aria-hidden="true"><div></div><div></div><div></div><div></div></div>
+
+<div class="loader" id="loader">
+  <div class="loader-text">CINNAMON</div>
+  <div class="loader-sub">design system · azure nocturne</div>
+  <div class="loader-bar" id="loaderBar"></div>
+</div>
+
+<!-- ======================= NAV DO DESIGN SYSTEM ======================= -->
+<header class="topbar" id="topbar">
+  <a class="brand" href="#topo" aria-label="Cinnamon Services — design system">
+    <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+    <span class="brand-word">CINNAMON<span class="brand-thin"> DESIGN SYSTEM</span></span>
+  </a>
+
+  <nav class="topnav" aria-label="Seções do design system">
+    <a href="#tipografia" data-nav>Tipografia</a>
+    <a href="#cores" data-nav>Cores</a>
+    <a href="#componentes" data-nav>Componentes</a>
+    <a href="#layout" data-nav>Layout</a>
+    <a href="#movimento" data-nav>Movimento</a>
+    <a href="#icones" data-nav>Ícones</a>
+  </nav>
+
+  <div class="flex items-center gap-3">
+    <a class="topbuy" href="#topo">
+      <span class="buy-label">Azure</span>
+      <span class="buy-price">Nocturne</span>
+    </a>
+    <button class="nav-toggle" id="navToggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="navDrawer">
+      <i data-lucide="menu" class="w-5 h-5"></i>
+    </button>
+  </div>
+</header>
+
+<!-- menu mobile (mesmo componente do site) -->
+<div class="nav-drawer" id="navDrawer" aria-hidden="true">
+  <a href="#tipografia"><span>01</span> Tipografia</a>
+  <a href="#cores"><span>02</span> Cores</a>
+  <a href="#componentes"><span>03</span> Componentes</a>
+  <a href="#layout"><span>04</span> Layout</a>
+  <a href="#movimento"><span>05</span> Movimento</a>
+  <a href="#icones"><span>06</span> Ícones</a>
+  <div class="drawer-foot">
+    <p class="t-caption">Biblioteca de padrões viva — reusa as classes, animações e tokens reais do site.</p>
+    <a class="button-custom" href="#topo" style="width:fit-content">
+      <div class="points_wrapper" aria-hidden="true"><i class="point"></i><i class="point"></i><i class="point"></i><i class="point"></i><i class="point"></i></div>
+      <span class="inner">Voltar ao topo <i data-lucide="arrow-up" class="icon"></i></span>
+    </a>
+  </div>
+</div>
+
+<!-- ======================= 00 · HERO — CLONE EXATO, TEXTO ADAPTADO ======================= -->
+<section class="hero" id="topo">
+  <div class="aurora" aria-hidden="true"></div>
+  <div class="dotgrid" aria-hidden="true"></div>
+
+  <div class="gridlines" aria-hidden="true">
+    <div class="gl"><span class="gl-num">01</span></div>
+    <div class="gl">
+      <div class="beam beam--soft animate-beam-1" style="left:-1px"></div>
+      <span class="gl-num">02</span>
+    </div>
+    <div class="gl">
+      <div class="gl-dash"></div>
+      <div class="beam animate-beam-2" style="left:-1px"></div>
+      <div class="beam beam--bordo animate-beam-4" style="left:50%"></div>
+      <span class="gl-num" style="color:rgba(76,126,243,.3)">03</span>
+    </div>
+    <div class="gl">
+      <div class="beam beam--soft animate-beam-3" style="left:-1px"></div>
+      <span class="gl-num">04</span>
+    </div>
+    <div class="gl"><span class="gl-num">05</span></div>
+  </div>
+
+  <canvas id="scene" width="1920" height="1080" aria-hidden="true" data-engine="three.js r160"></canvas>
+  <div class="hero-poster" id="poster" aria-hidden="true"><div class="poster-glyph">C</div></div>
+  <div class="hero-vignette" aria-hidden="true"></div>
+
+  <div class="specimen-hud" aria-hidden="true">
+    <div class="hud-block hud-tl"><span class="hud-cap">Fundindo</span><span class="hud-glyph" id="hudGlyph">C</span></div>
+    <div class="hud-block hud-tr"><span class="hud-cap">Partículas</span><span class="hud-val hud-fig" id="hudCount">42.000</span></div>
+    <div class="hud-block hud-bl"><span class="hud-cap">Estado</span><span class="hud-val" id="hudState">fundido</span></div>
+    <div class="hud-block hud-br"><span class="hud-cap">Design System</span><span class="hud-val hud-fig">Azure Nocturne · v1</span></div>
+  </div>
+
+  <div class="hero-overlay">
+    <div class="hero-kicker"><span class="kick-dot" aria-hidden="true"></span> Biblioteca de padrões viva</div>
+    <h1 class="hero-h1">
+      <span class="h1-line h1-grad">O sistema que</span>
+      <span class="h1-line"><span class="h1-accent">gera</span> o site.</span>
+    </h1>
+    <p class="hero-lede">
+      Tokens, tipografia e componentes <strong>reusados exatamente como o site os usa</strong> —
+      mesmas classes, mesmas animações, mesma fonte de verdade. Do átomo de cor ao
+      card com revelação, tudo aqui é o design que <strong>de fato entra em produção</strong>.
+    </p>
+
+    <div class="hero-cta">
+      <a class="btn-glass group" href="#tipografia">
+        <span class="beam-ring" aria-hidden="true"><i></i></span>
+        <span class="glass-fill" aria-hidden="true"></span>
+        <span class="glass-body">
+          <span style="width:28px;height:28px;border-radius:50%;display:grid;place-items:center;flex:none;
+                       background:linear-gradient(180deg,var(--azure-400),var(--azure-600));
+                       box-shadow:0 6px 18px var(--azure-glow);border:1px solid rgba(255,255,255,.22);"
+                class="transition-transform duration-300 group-hover:scale-110">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-white"></i>
+          </span>
+          <span class="whitespace-nowrap tracking-tight">Explorar o sistema</span>
+          <span style="width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.10);display:grid;place-items:center;flex:none"
+                class="group-hover:translate-x-0.5 transition-transform">
+            <i data-lucide="arrow-right" class="w-3 h-3"></i>
+          </span>
+        </span>
+      </a>
+
+      <button class="shiny-cta" type="button" onclick="scrollToTarget('#componentes',-70)">
+        <span>Ver componentes <i data-lucide="layout-grid" class="w-4 h-4"></i></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="specimen-controls" role="group" aria-label="Escolher o glifo do specimen">
+    <button class="glyph-btn is-active" data-g="C">C</button>
+    <button class="glyph-btn" data-g="S">S</button>
+    <button class="glyph-btn" data-g="✦">✦</button>
+    <button class="glyph-btn" data-g="@">@</button>
+    <button class="glyph-btn glyph-btn--wide" id="autoBtn" aria-pressed="true">
+      <span class="auto-tick" aria-hidden="true"></span> auto
+    </button>
+  </div>
+
+  <p class="hero-hint" id="heroHint">mova sobre a letra para esculpir · clique para refundir</p>
+</section>
+
+<!-- ======================= 01 · TIPOGRAFIA ======================= -->
+<section class="sec" id="tipografia">
+  <div class="aurora" aria-hidden="true"></div>
+  <div class="sec-inner">
+    <header class="sec-head animate-on-scroll fx-rise">
+      <div class="sec-idx">01 · Tipografia</div>
+      <h2 class="t-h2 split-animate">A escala, exatamente como o site a renderiza.</h2>
+      <p class="sec-sub">
+        Cada linha usa a <strong>classe real</strong> do sistema (<span class="code">.t-*</span>),
+        não um facsímile. Manrope carrega o texto; Fraunces e Instrument Serif dão o tom editorial;
+        Syncopate e JetBrains Mono marcam displays e rótulos.
+      </p>
+    </header>
+
+    <div class="waterfall animate-on-scroll fx-rise delay-1">
+      <div class="spec-row">
+        <div><span class="t-h1">Heading 1</span></div>
+        <div class="spec-chips"><span class="chip">.t-h1</span><span class="chip">Manrope 500</span><span class="chip">clamp(3rem, 7.4vw, 7rem)</span><span class="chip">lh .88</span></div>
+      </div>
+      <div class="spec-row">
+        <div><span class="t-h2">Heading 2</span></div>
+        <div class="spec-chips"><span class="chip">.t-h2</span><span class="chip">Manrope 500</span><span class="chip">clamp(2.35rem, 5.2vw, 4.5rem)</span><span class="chip">lh 1.02</span></div>
+      </div>
+      <div class="spec-row">
+        <div><span class="t-h3">Heading 3</span></div>
+        <div class="spec-chips"><span class="chip">.t-h3</span><span class="chip">Manrope 500</span><span class="chip">clamp(1.85rem, 3.6vw, 3rem)</span><span class="chip">lh 1.08</span></div>
+      </div>
+      <div class="spec-row">
+        <div><span class="t-h4">Heading 4</span></div>
+        <div class="spec-chips"><span class="chip">.t-h4</span><span class="chip">Manrope 600</span><span class="chip">clamp(1.35rem, 2.2vw, 1.875rem)</span><span class="chip">lh 1.2</span></div>
+      </div>
+      <div class="spec-row">
+        <div><span class="t-h5">Heading 5 — editorial itálico</span></div>
+        <div class="spec-chips"><span class="chip">.t-h5</span><span class="chip">Instrument Serif itálico</span><span class="chip">clamp(1.2rem, 1.9vw, 1.6rem)</span><span class="chip">lh 1.28</span></div>
+      </div>
+      <div class="spec-row">
+        <div><span class="t-h6">Heading 6 — display</span></div>
+        <div class="spec-chips"><span class="chip">.t-h6</span><span class="chip">Syncopate 700</span><span class="chip">clamp(.9rem, 1.25vw, 1.1rem)</span><span class="chip">uppercase</span></div>
+      </div>
+      <div class="spec-row">
+        <div><span class="t-display-xl">Display XL</span></div>
+        <div class="spec-chips"><span class="chip">.t-display-xl</span><span class="chip">Fraunces 900</span><span class="chip">clamp(3rem, 9vw, 7rem)</span><span class="chip">lh .92</span></div>
+      </div>
+      <div class="spec-row">
+        <div><span class="t-quote">“Citação em Fraunces light — o tom das falas mais longas.”</span></div>
+        <div class="spec-chips"><span class="chip">.t-quote</span><span class="chip">Fraunces 300</span><span class="chip">clamp(1.15rem, 1.9vw, 1.5rem)</span><span class="chip">lh 1.55</span></div>
+      </div>
+      <div class="spec-row">
+        <div><span class="t-body-lg">Body Large — parágrafo de destaque, o corpo mais encorpado do sistema.</span></div>
+        <div class="spec-chips"><span class="chip">.t-body-lg</span><span class="chip">Manrope 500</span><span class="chip">18px / lh 1.7</span></div>
+      </div>
+      <div class="spec-row">
+        <div><span class="t-body">Body — o parágrafo padrão que carrega a maior parte do texto corrido do site.</span></div>
+        <div class="spec-chips"><span class="chip">.t-body</span><span class="chip">Manrope 400</span><span class="chip">15px / lh 1.65</span></div>
+      </div>
+      <div class="spec-row">
+        <div><span class="t-body-sm">Body Small — corpo reduzido dos cards de serviço, bios e FAQs.</span></div>
+        <div class="spec-chips"><span class="chip">.t-body-sm</span><span class="chip">Manrope 400</span><span class="chip">13px / lh 1.6</span></div>
+      </div>
+      <div class="spec-row">
+        <div><span class="t-eyebrow">Eyebrow · azure</span></div>
+        <div class="spec-chips"><span class="chip">.t-eyebrow</span><span class="chip">JetBrains Mono 500</span><span class="chip">~11px</span><span class="chip">tracking .3em</span></div>
+      </div>
+      <div class="spec-row">
+        <div><span class="t-label">Label mono uppercase</span></div>
+        <div class="spec-chips"><span class="chip">.t-label</span><span class="chip">JetBrains Mono 500</span><span class="chip">10px</span><span class="chip">tracking .25em</span></div>
+      </div>
+      <div class="spec-row">
+        <div><span class="t-caption">Caption — legenda mono discreta usada em rodapés de card.</span></div>
+        <div class="spec-chips"><span class="chip">.t-caption</span><span class="chip">JetBrains Mono 400</span><span class="chip">11px</span><span class="chip">tracking .08em</span></div>
+      </div>
+      <div class="spec-row">
+        <div><span class="t-helper">Helper — texto de apoio em formulários e notas.</span></div>
+        <div class="spec-chips"><span class="chip">.t-helper</span><span class="chip">Manrope 400</span><span class="chip">12px / lh 1.5</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 02 · CORES & SUPERFÍCIES ======================= -->
+<section class="sec sec--navy" id="cores">
+  <div class="aurora aurora--warm" aria-hidden="true"></div>
+  <div class="sec-inner">
+    <header class="sec-head animate-on-scroll fx-rise">
+      <div class="sec-idx">02 · Cores &amp; superfícies</div>
+      <h2 class="t-h2 split-animate">Ink, navy, azure e bordô.</h2>
+      <p class="sec-sub">
+        Superfícies escuras empilhadas em profundidade, azure como primária e bordô como acento.
+        Cada swatch usa a <strong>variável real</strong> (<span class="code">--token</span>) declarada em
+        <span class="code">:root</span> — passe o mouse para o hint de cópia.
+      </p>
+    </header>
+
+    <!-- Superfícies -->
+    <div class="sub-label">Superfícies (fundo → elevada)</div>
+    <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4 mb-12 animate-on-scroll fx-rise delay-1">
+      <div>
+        <div class="swatch" data-copy="--ink" style="background:var(--ink);border:1px solid var(--line)"><span class="copy-hint">copiar --ink</span></div>
+        <p class="t-caption mt-2">--ink · #0A0B0D</p>
+      </div>
+      <div>
+        <div class="swatch" data-copy="--navy-2" style="background:var(--navy-2);border:1px solid var(--line)"><span class="copy-hint">copiar --navy-2</span></div>
+        <p class="t-caption mt-2">--navy-2 · #0D1420</p>
+      </div>
+      <div>
+        <div class="swatch" data-copy="--navy" style="background:var(--navy);border:1px solid var(--line)"><span class="copy-hint">copiar --navy</span></div>
+        <p class="t-caption mt-2">--navy · #111A2B</p>
+      </div>
+      <div>
+        <div class="swatch" data-copy="--navy-3" style="background:var(--navy-3);border:1px solid var(--line)"><span class="copy-hint">copiar --navy-3</span></div>
+        <p class="t-caption mt-2">--navy-3 · #16233A</p>
+      </div>
+      <div>
+        <div class="swatch" data-copy="--line" style="background:var(--line)"><span class="copy-hint">copiar --line</span></div>
+        <p class="t-caption mt-2">--line · #1E2E4A</p>
+      </div>
+    </div>
+
+    <!-- Rampa azure -->
+    <div class="sub-label">Azure · primária</div>
+    <div class="grid grid-cols-4 md:grid-cols-8 gap-3 mb-12 animate-on-scroll fx-rise delay-1">
+      <div class="ramp" data-copy="--azure-100" style="background:var(--azure-100)"><span style="color:#16264F">100</span></div>
+      <div class="ramp" data-copy="--azure-200" style="background:var(--azure-200)"><span style="color:#16264F">200</span></div>
+      <div class="ramp" data-copy="--azure-300" style="background:var(--azure-300)"><span style="color:#16264F">300</span></div>
+      <div class="ramp" data-copy="--azure-400" style="background:var(--azure-400)"><span style="color:#0A0B0D">400</span></div>
+      <div class="ramp" data-copy="--azure" style="background:var(--azure)"><span style="color:#fff">500</span></div>
+      <div class="ramp" data-copy="--azure-600" style="background:var(--azure-600)"><span style="color:#fff">600</span></div>
+      <div class="ramp" data-copy="--azure-700" style="background:var(--azure-700)"><span style="color:#fff">700</span></div>
+      <div class="ramp" data-copy="--azure-900" style="background:var(--azure-900)"><span style="color:#fff">900</span></div>
+    </div>
+
+    <!-- Rampa bordô -->
+    <div class="sub-label">Bordô · acento</div>
+    <div class="grid grid-cols-3 md:grid-cols-5 gap-3 mb-12 animate-on-scroll fx-rise delay-1">
+      <div class="ramp" data-copy="--bordo-300" style="background:var(--bordo-300)"><span style="color:#3A0C17">300</span></div>
+      <div class="ramp" data-copy="--bordo-400" style="background:var(--bordo-400)"><span style="color:#fff">400</span></div>
+      <div class="ramp" data-copy="--bordo" style="background:var(--bordo)"><span style="color:#fff">500</span></div>
+      <div class="ramp" data-copy="--bordo-600" style="background:var(--bordo-600)"><span style="color:#fff">600</span></div>
+      <div class="ramp" data-copy="--bordo-700" style="background:var(--bordo-700)"><span style="color:#fff">700</span></div>
+    </div>
+
+    <!-- Neutros + feedback -->
+    <div class="grid md:grid-cols-2 gap-10 mb-12 animate-on-scroll fx-rise delay-2">
+      <div>
+        <div class="sub-label">Texto &amp; neutros</div>
+        <div class="grid grid-cols-4 gap-3">
+          <div class="ramp" data-copy="--paper" style="background:var(--paper)"><span style="color:#0A0B0D">paper</span></div>
+          <div class="ramp" data-copy="--text" style="background:var(--text)"><span style="color:#0A0B0D">text</span></div>
+          <div class="ramp" data-copy="--muted" style="background:var(--muted)"><span style="color:#0A0B0D">muted</span></div>
+          <div class="ramp" data-copy="--faint" style="background:var(--faint)"><span style="color:#fff">faint</span></div>
+        </div>
+      </div>
+      <div>
+        <div class="sub-label">Feedback</div>
+        <div class="grid grid-cols-4 gap-3">
+          <div class="ramp" data-copy="--success" style="background:var(--success)"><span style="color:#0A0B0D">success</span></div>
+          <div class="ramp" data-copy="--warning" style="background:var(--warning)"><span style="color:#0A0B0D">warning</span></div>
+          <div class="ramp" data-copy="--danger" style="background:var(--danger)"><span style="color:#fff">danger</span></div>
+          <div class="ramp" data-copy="--info" style="background:var(--info)"><span style="color:#fff">info</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gradientes com contexto de uso -->
+    <div class="sub-label">Gradientes — com contexto de uso</div>
+    <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-4 animate-on-scroll fx-rise delay-2">
+      <div>
+        <div class="swatch" style="background:linear-gradient(90deg,var(--azure-700),var(--azure),var(--azure-300),var(--bordo))"></div>
+        <p class="t-caption mt-2">Barra de progresso de scroll (<span class="code">.scroll-progress</span>)</p>
+      </div>
+      <div>
+        <div class="swatch" style="background:linear-gradient(180deg,var(--azure-200),var(--azure) 55%,var(--bordo))"></div>
+        <p class="t-caption mt-2">Poster do hero &amp; texto glifo (azure→bordô)</p>
+      </div>
+      <div>
+        <div class="swatch" style="background:linear-gradient(90deg,var(--azure),var(--bordo))"></div>
+        <p class="t-caption mt-2">Toplines de card, sublinhado do H1, brand-mark</p>
+      </div>
+      <div>
+        <div class="swatch" style="background:radial-gradient(circle,rgba(76,126,243,.5),transparent 68%),var(--navy-2)"></div>
+        <p class="t-caption mt-2">Aurora azure (<span class="code">.aurora::before</span>)</p>
+      </div>
+      <div>
+        <div class="swatch" style="background:radial-gradient(circle,rgba(166,51,72,.5),transparent 68%),var(--navy-2)"></div>
+        <p class="t-caption mt-2">Aurora bordô (<span class="code">.aurora::after</span>)</p>
+      </div>
+      <div>
+        <div class="swatch" style="background:linear-gradient(180deg,var(--azure-400),var(--azure-600))"></div>
+        <p class="t-caption mt-2">Preenchimento de botão primário &amp; badge sólido</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 03 · COMPONENTES ======================= -->
+<section class="sec" id="componentes">
+  <div class="aurora" aria-hidden="true"></div>
+  <div class="dotgrid" aria-hidden="true"></div>
+  <div class="sec-inner">
+    <header class="sec-head animate-on-scroll fx-rise">
+      <div class="sec-idx">03 · Componentes</div>
+      <h2 class="t-h2 split-animate">Botões, campos e cards — em estado real.</h2>
+      <p class="sec-sub">
+        Todos reusam as classes do site. Passe o mouse, foque e interaja: os estados
+        de <strong>hover, foco, ativo e desabilitado</strong> são os mesmos que entram em produção.
+      </p>
+    </header>
+
+    <!-- BOTÕES -->
+    <div class="sub-label">Botões</div>
+    <div class="flex flex-wrap items-center gap-5 mb-6 animate-on-scroll fx-rise delay-1">
+      <a class="button-custom" href="#componentes">
+        <div class="points_wrapper" aria-hidden="true"><i class="point"></i><i class="point"></i><i class="point"></i><i class="point"></i><i class="point"></i><i class="point"></i><i class="point"></i></div>
+        <span class="inner">Primário glow <i data-lucide="arrow-right" class="icon"></i></span>
+      </a>
+      <button class="button-custom button-custom--bordo" type="button">
+        <div class="points_wrapper" aria-hidden="true"><i class="point"></i><i class="point"></i><i class="point"></i><i class="point"></i><i class="point"></i></div>
+        <span class="inner">Primário bordô <i data-lucide="arrow-right" class="icon"></i></span>
+      </button>
+      <button class="button-custom is-disabled" type="button" aria-disabled="true">
+        <span class="inner">Desabilitado</span>
+      </button>
+    </div>
+    <div class="flex flex-wrap items-center gap-5 mb-6 animate-on-scroll fx-rise delay-1">
+      <button class="shiny-cta" type="button"><span>Shiny CTA <i data-lucide="sparkles" class="w-4 h-4"></i></span></button>
+      <a class="btn-glass group" href="#componentes">
+        <span class="beam-ring" aria-hidden="true"><i></i></span>
+        <span class="glass-fill" aria-hidden="true"></span>
+        <span class="glass-body">
+          <span class="whitespace-nowrap tracking-tight">Glass beam</span>
+          <span style="width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.10);display:grid;place-items:center;flex:none" class="group-hover:translate-x-0.5 transition-transform">
+            <i data-lucide="arrow-right" class="w-3 h-3"></i>
+          </span>
+        </span>
+      </a>
+    </div>
+    <div class="flex flex-wrap items-center gap-5 mb-12 animate-on-scroll fx-rise delay-1">
+      <a class="btn-outline" href="#componentes">Outline <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+      <a class="btn-outline btn-outline--bordo" href="#componentes">Outline bordô <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+      <a class="btn-ghost" href="#componentes">Ghost link</a>
+      <button class="btn-icon" type="button" aria-label="Ícone"><i data-lucide="arrow-up-right" class="w-5 h-5"></i></button>
+    </div>
+
+    <!-- CAMPOS DE FORMULÁRIO -->
+    <div class="sub-label">Campos &amp; controles</div>
+    <div class="grid md:grid-cols-2 gap-8 mb-6 animate-on-scroll fx-rise delay-1">
+      <div class="form-field">
+        <label class="t-label" for="d-default">Input · default → hover → focus</label>
+        <input class="field" id="d-default" type="text" placeholder="Digite para ver o foco azure"/>
+      </div>
+      <div class="form-field">
+        <label class="t-label" for="d-error">Input · erro</label>
+        <input class="field is-error" id="d-error" type="text" value="valor inválido"/>
+      </div>
+      <div class="form-field">
+        <label class="t-label" for="d-success">Input · sucesso</label>
+        <input class="field is-success" id="d-success" type="text" value="tudo certo"/>
+      </div>
+      <div class="form-field">
+        <label class="t-label" for="d-disabled">Input · desabilitado</label>
+        <input class="field" id="d-disabled" type="text" value="não editável" disabled/>
+      </div>
+      <div class="form-field md:col-span-2">
+        <label class="t-label" for="d-area">Textarea</label>
+        <textarea class="field" id="d-area" placeholder="Área de texto redimensionável"></textarea>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-10 mb-6 animate-on-scroll fx-rise delay-1">
+      <div class="flex items-center gap-3">
+        <span class="switch" role="switch" aria-checked="false" onclick="toggleSwitch(this)"><i></i></span>
+        <span class="t-body-sm" style="color:var(--muted)">Switch</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="check" role="checkbox" aria-checked="false" onclick="toggleCheck(this)"><i data-lucide="check" class="w-3.5 h-3.5"></i></span>
+        <span class="t-body-sm" style="color:var(--muted)">Checkbox</span>
+      </div>
+      <div class="flex items-center gap-5" data-radio-group>
+        <label class="flex items-center gap-3" onclick="pickRadio(this)"><span class="radio on"><i></i></span><span class="t-body-sm" style="color:var(--muted)">Rádio A</span></label>
+        <label class="flex items-center gap-3" onclick="pickRadio(this)"><span class="radio"><i></i></span><span class="t-body-sm" style="color:var(--muted)">Rádio B</span></label>
+      </div>
+    </div>
+
+    <!-- SELECT CUSTOMIZADO -->
+    <div class="form-field mb-12 animate-on-scroll fx-rise delay-1" style="max-width:420px">
+      <label class="t-label">Select customizado (<span class="code">.cs</span>)</label>
+      <div class="cs" id="dsSelect">
+        <button type="button" class="field cs-trigger flex items-center justify-between" aria-haspopup="listbox" aria-expanded="false" onclick="toggleSelect(this)">
+          <span class="cs-value" style="color:var(--faint)">Selecione uma opção</span>
+          <i data-lucide="chevron-down" class="cs-chevron w-4 h-4" style="color:var(--muted)"></i>
+        </button>
+        <div class="cs-panel" role="listbox" aria-label="Opções">
+          <button type="button" class="cs-option" role="option" aria-selected="false" data-value="Automação com IA" onclick="pickOption(this)">Automação com IA <i data-lucide="check" class="cs-check w-4 h-4"></i></button>
+          <button type="button" class="cs-option" role="option" aria-selected="false" data-value="Agentes sob medida" onclick="pickOption(this)">Agentes sob medida <i data-lucide="check" class="cs-check w-4 h-4"></i></button>
+          <button type="button" class="cs-option" role="option" aria-selected="false" data-value="CRM e vendas" onclick="pickOption(this)">CRM e vendas <i data-lucide="check" class="cs-check w-4 h-4"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- BADGES -->
+    <div class="sub-label">Badges</div>
+    <div class="flex flex-wrap items-center gap-4 mb-12 animate-on-scroll fx-rise delay-1">
+      <span class="badge badge--solid"><span class="badge-dot"></span> Solid</span>
+      <span class="badge badge--bordo"><span class="badge-dot"></span> Bordô</span>
+      <span class="badge badge--outline"><span class="badge-dot"></span> Outline</span>
+      <span class="badge badge--outline-bordo"><span class="badge-dot"></span> Outline bordô</span>
+      <span class="badge badge--ghost"><span class="badge-dot"></span> Ghost</span>
+      <span class="badge badge--glass"><span class="badge-dot"></span> Glass</span>
+      <span class="badge badge--tag">Tag mono</span>
+    </div>
+
+    <!-- CARDS -->
+    <div class="sub-label">Cards &amp; painéis</div>
+    <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-5 mb-6 animate-on-scroll fx-rise delay-1">
+      <article class="card card--topline">
+        <span class="t-label mb-4 block">R/01</span>
+        <h3 class="t-h4 mb-2" style="font-size:1.15rem">Card com topline</h3>
+        <p class="t-body-sm" style="color:var(--muted)">Barra superior azure→bordô cresce no hover; brilho radial revela no canto.</p>
+      </article>
+      <article class="card card--bordo">
+        <span class="t-label mb-4 block">R/02</span>
+        <h3 class="t-h4 mb-2" style="font-size:1.15rem">Card bordô</h3>
+        <p class="t-body-sm" style="color:var(--muted)">Variante de acento — brilho e borda de hover em bordô.</p>
+      </article>
+      <article class="card card-featured" style="position:relative">
+        <span class="card-flag">destaque</span>
+        <p class="t-label mb-3 mt-2">Card featured</p>
+        <span class="ph ph--fig mb-4">00</span>
+        <p class="t-body-sm" style="color:var(--muted)">Fundo em degradê navy e bandeira flutuante.</p>
+      </article>
+    </div>
+
+    <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-5 mb-6 animate-on-scroll fx-rise delay-2">
+      <!-- solution card (reveal do exemplo no hover) -->
+      <article class="sol">
+        <span class="sol-icon"><i data-lucide="workflow" class="w-5 h-5"></i></span>
+        <i data-lucide="arrow-up-right" class="sol-arrow w-5 h-5"></i>
+        <h3 class="t-h4 mb-2" style="font-size:1.25rem">Solution card</h3>
+        <p class="t-body-sm" style="color:var(--muted)">Passe o mouse: a linha de exemplo desliza para dentro.</p>
+        <p class="sol-example">ex.: o texto mono revelado no hover</p>
+      </article>
+      <!-- case card -->
+      <article class="case">
+        <span class="case-tag">Case 01 · segmento</span>
+        <h3>Case card</h3>
+        <p>Topline, brilho e seta que desloca no hover — o padrão da seção de resultados.</p>
+        <div class="case-foot">
+          <span class="badge badge--outline"><span class="badge-dot"></span> resultado</span>
+          <i data-lucide="arrow-up-right" class="case-arrow w-5 h-5"></i>
+        </div>
+      </article>
+      <!-- bio card -->
+      <article class="bio">
+        <div class="bio-avatar">A</div>
+        <h3>Bio card</h3>
+        <span class="bio-role">cargo</span>
+        <p>Avatar editorial que ganha glow azure no hover — o padrão da seção de time.</p>
+      </article>
+    </div>
+
+    <div class="grid md:grid-cols-4 gap-4 animate-on-scroll fx-rise delay-2">
+      <div class="panel"><p class="t-label mb-2">.panel</p><p class="t-body-sm" style="color:var(--muted)">Superfície navy padrão.</p></div>
+      <div class="panel panel--quiet"><p class="t-label mb-2">.panel--quiet</p><p class="t-body-sm" style="color:var(--muted)">Superfície recuada.</p></div>
+      <div class="panel panel--azure"><p class="t-label mb-2">.panel--azure</p><p class="t-body-sm" style="color:var(--muted)">Borda-guia azure.</p></div>
+      <div class="panel panel--bordo"><p class="t-label mb-2">.panel--bordo</p><p class="t-body-sm" style="color:var(--muted)">Borda-guia bordô.</p></div>
+    </div>
+
+    <!-- FAQ como componente de disclosure -->
+    <div class="sub-label mt-12">Disclosure / FAQ</div>
+    <div class="faq animate-on-scroll fx-rise delay-2" style="max-width:760px">
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          Como o acordeão anima a altura?
+          <span class="faq-icon" aria-hidden="true"><i data-lucide="plus" class="w-4 h-4"></i></span>
+        </button>
+        <div class="faq-a"><div class="faq-a-inner">
+          <p>Anima de <strong>0 até scrollHeight em px</strong> e devolve para <span class="code">auto</span> ao fim,
+            acompanhando reflow. O ícone <span class="code">+</span> gira 45° virando <span class="code">×</span>.</p>
+        </div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          Abrir um fecha os outros?
+          <span class="faq-icon" aria-hidden="true"><i data-lucide="plus" class="w-4 h-4"></i></span>
+        </button>
+        <div class="faq-a"><div class="faq-a-inner">
+          <p>Sim — comportamento de acordeão single-open, idêntico à seção de perguntas do site.</p>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 04 · LAYOUT & ESPAÇAMENTO ======================= -->
+<section class="sec sec--navy" id="layout">
+  <div class="aurora aurora--warm" aria-hidden="true"></div>
+  <div class="sec-inner">
+    <header class="sec-head animate-on-scroll fx-rise">
+      <div class="sec-idx">04 · Layout &amp; espaçamento</div>
+      <h2 class="t-h2 split-animate">Padrões reais de página.</h2>
+      <p class="sec-sub">
+        O sistema é montado sobre <span class="code">.sec</span> (padding fluido +
+        <span class="code">.sec-inner</span> com max-width 1440px) e três padrões que se repetem:
+        grade de métricas, faixa de logos e o split assimétrico.
+      </p>
+    </header>
+
+    <!-- Métricas -->
+    <div class="sub-label">Grade de métricas (4 → 2 → 1 col)</div>
+    <div class="metrics mb-12 animate-on-scroll fx-rise delay-1" style="border-top:1px solid var(--line-soft)">
+      <div class="metric"><span class="metric-fig">42k</span><span class="metric-label">partículas no hero</span></div>
+      <div class="metric"><span class="metric-fig">5</span><span class="metric-label">famílias tipográficas</span></div>
+      <div class="metric"><span class="metric-fig">4</span><span class="metric-label">superfícies empilhadas</span></div>
+      <div class="metric"><span class="metric-fig">1</span><span class="metric-label">fonte de verdade</span></div>
+    </div>
+
+    <!-- Logos -->
+    <div class="sub-label">Faixa de logos (wrap centralizado)</div>
+    <div class="logos mb-12 animate-on-scroll fx-rise delay-1">
+      <span class="logo-slot">slot 01</span>
+      <span class="logo-slot">slot 02</span>
+      <span class="logo-slot">slot 03</span>
+      <span class="logo-slot">slot 04</span>
+      <span class="logo-slot">slot 05</span>
+    </div>
+
+    <!-- Split assimétrico -->
+    <div class="sub-label">Split assimétrico (minmax + 1fr)</div>
+    <div class="grid lg:grid-cols-[minmax(0,380px)_1fr] gap-10 lg:gap-20 items-start mb-12 animate-on-scroll fx-rise delay-1">
+      <div>
+        <div class="sub-label">Coluna fixa</div>
+        <h3 class="t-h3 mb-4">Cabeçalho à esquerda.</h3>
+        <p class="t-body" style="color:var(--muted)">A coluna estreita segura o título; a larga recebe a grade de conteúdo. É o padrão das seções “Por que” e “Perguntas”.</p>
+      </div>
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div class="card card--topline"><span class="t-label mb-3 block">01</span><p class="t-body-sm" style="color:var(--muted)">Célula de conteúdo.</p></div>
+        <div class="card card--topline"><span class="t-label mb-3 block">02</span><p class="t-body-sm" style="color:var(--muted)">Célula de conteúdo.</p></div>
+        <div class="card card--topline"><span class="t-label mb-3 block">03</span><p class="t-body-sm" style="color:var(--muted)">Célula de conteúdo.</p></div>
+        <div class="card card--topline card--bordo"><span class="t-label mb-3 block">04</span><p class="t-body-sm" style="color:var(--muted)">Célula de acento.</p></div>
+      </div>
+    </div>
+
+    <div class="rule"></div>
+
+    <!-- Steps -->
+    <div class="sub-label">Passos numerados (círculos + ring no hover)</div>
+    <div class="grid md:grid-cols-2 xl:grid-cols-4 gap-6 animate-on-scroll fx-rise delay-1">
+      <div class="group-step">
+        <div class="step-circle">01</div>
+        <div class="flex items-baseline gap-3 mb-2"><h3 class="t-h4" style="font-size:1.2rem">Mapa</h3><span class="tag-inline tag-inline--now">grátis</span></div>
+        <p class="t-body-sm" style="color:var(--muted)">Passe o mouse no círculo para o ring expandindo.</p>
+      </div>
+      <div class="group-step">
+        <div class="step-circle">02</div>
+        <div class="flex items-baseline gap-3 mb-2"><h3 class="t-h4" style="font-size:1.2rem">Proposta</h3></div>
+        <p class="t-body-sm" style="color:var(--muted)">Círculo editorial em itálico.</p>
+      </div>
+      <div class="group-step">
+        <div class="step-circle">03</div>
+        <div class="flex items-baseline gap-3 mb-2"><h3 class="t-h4" style="font-size:1.2rem">Projeto</h3></div>
+        <p class="t-body-sm" style="color:var(--muted)">Fundo vira degradê azure no hover.</p>
+      </div>
+      <div class="group-step">
+        <div class="step-circle">04</div>
+        <div class="flex items-baseline gap-3 mb-2"><h3 class="t-h4" style="font-size:1.2rem">Gestão</h3><span class="tag-inline">opcional</span></div>
+        <p class="t-body-sm" style="color:var(--muted)">Tag inline neutra.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 05 · MOVIMENTO & INTERAÇÃO ======================= -->
+<section class="sec" id="movimento">
+  <div class="aurora" aria-hidden="true"></div>
+  <div class="gridlines" aria-hidden="true">
+    <div class="gl"></div>
+    <div class="gl"><div class="beam beam--soft animate-beam-3" style="left:-1px"></div></div>
+    <div class="gl"><div class="gl-dash"></div></div>
+    <div class="gl"><div class="beam beam--bordo animate-beam-2" style="left:-1px"></div></div>
+    <div class="gl"></div>
+  </div>
+  <div class="sec-inner">
+    <header class="sec-head animate-on-scroll fx-rise">
+      <div class="sec-idx">05 · Movimento &amp; interação</div>
+      <h2 class="t-h2 split-animate">Timing, easing e revelação.</h2>
+      <p class="sec-sub">
+        Durações (<span class="code">--d-fast .25s</span> → <span class="code">--d-slower 1s</span>) e easings
+        (<span class="code">--ease-expo</span>, <span class="code">--ease-spring</span>, <span class="code">--ease-io</span>)
+        são tokens. Abaixo, cada animação isolada — use <strong>Replay</strong> nas que disparam uma vez só.
+      </p>
+    </header>
+
+    <div class="sub-label">Galeria de movimento</div>
+    <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-5 animate-on-scroll fx-rise delay-1">
+      <!-- fx-rise entrada -->
+      <div class="panel">
+        <div class="flex items-center justify-between mb-4">
+          <p class="t-label">.fx-rise · fadeSlideIn</p>
+          <button class="btn-ghost" type="button" onclick="replay(this,'.replay-rise')">Replay</button>
+        </div>
+        <div class="replay-rise fx-rise"><div class="card"><p class="t-body-sm" style="color:var(--muted)">blur + translateY, 1s ease-expo</p></div></div>
+      </div>
+
+      <!-- columnReveal -->
+      <div class="panel">
+        <div class="flex items-center justify-between mb-4">
+          <p class="t-label">.col-anim · columnReveal</p>
+          <button class="btn-ghost" type="button" onclick="replay(this,'.replay-col')">Replay</button>
+        </div>
+        <div class="replay-col col-anim" style="animation-play-state:running">
+          <div class="card card-featured" style="position:relative"><p class="t-body-sm" style="color:var(--muted)">clip-path de baixo para cima, 1.4s</p></div>
+        </div>
+      </div>
+
+      <!-- word reveal -->
+      <div class="panel">
+        <div class="flex items-center justify-between mb-4">
+          <p class="t-label">.split-animate · word reveal</p>
+          <button class="btn-ghost" type="button" onclick="replayWords(this)">Replay</button>
+        </div>
+        <h3 class="t-h4 replay-words">Palavras que sobem em stagger.</h3>
+      </div>
+
+      <!-- beams (loop) -->
+      <div class="panel" style="position:relative;overflow:hidden;min-height:150px">
+        <p class="t-label mb-2">beam-fall · loop</p>
+        <div style="position:absolute;inset:0;pointer-events:none">
+          <div class="beam animate-beam-1" style="left:25%"></div>
+          <div class="beam beam--bordo animate-beam-2" style="left:55%"></div>
+          <div class="beam beam--soft animate-beam-3" style="left:80%"></div>
+        </div>
+        <p class="t-caption" style="position:absolute;bottom:18px">feixes caindo — infinito</p>
+      </div>
+
+      <!-- aurora (loop) -->
+      <div class="panel" style="position:relative;overflow:hidden;min-height:150px">
+        <p class="t-label mb-2" style="position:relative;z-index:2">.aurora · drift</p>
+        <div class="aurora"></div>
+        <p class="t-caption" style="position:absolute;bottom:18px;z-index:2">blobs em blur, 20–26s alternate</p>
+      </div>
+
+      <!-- shine sweep -->
+      <div class="panel shine">
+        <p class="t-label mb-2">.shine · sweep no hover</p>
+        <div class="card"><p class="t-body-sm" style="color:var(--muted)">passe o mouse para o brilho atravessar</p></div>
+      </div>
+
+      <!-- float + bounce -->
+      <div class="panel" style="position:relative;min-height:150px">
+        <p class="t-label mb-2">float-y &amp; bounceSubtle · loop</p>
+        <div class="hero-poster" style="display:grid;position:relative;height:90px"><div class="poster-glyph" style="font-size:80px">C</div></div>
+      </div>
+
+      <!-- pulse dots / brand mark -->
+      <div class="panel">
+        <p class="t-label mb-4">markpulse · brand mark</p>
+        <span class="brand-mark" aria-hidden="true" style="width:40px;height:40px"><span></span><span></span><span></span><span></span></span>
+      </div>
+
+      <!-- marquee -->
+      <div class="panel" style="overflow:hidden">
+        <p class="t-label mb-3">.marquee · scroll infinito</p>
+        <div class="marquee"><div class="marquee-track"><span>Azure</span><span>Nocturne</span><span>Design System</span><span>Azure</span><span>Nocturne</span><span>Design System</span></div></div>
+      </div>
+    </div>
+
+    <p class="t-caption mt-8" style="max-width:60ch">
+      Interações contínuas do sistema (não isoláveis aqui): spotlight que segue o cursor,
+      barra de progresso de scroll, navbar sticky com scrollspy, smooth-scroll via Lenis,
+      e o hero de partículas 3D no topo — todos ativos nesta página.
+    </p>
+  </div>
+</section>
+
+<!-- ======================= 06 · ÍCONES ======================= -->
+<section class="sec sec--navy" id="icones">
+  <div class="aurora aurora--warm" aria-hidden="true"></div>
+  <div class="sec-inner">
+    <header class="sec-head animate-on-scroll fx-rise">
+      <div class="sec-idx">06 · Ícones</div>
+      <h2 class="t-h2 split-animate">Lucide, hidratado por CDN.</h2>
+      <p class="sec-sub">
+        O sistema usa <strong>Lucide</strong> via <span class="code">&lt;i data-lucide="…"&gt;</span>,
+        criado por <span class="code">lucide.createIcons()</span> com
+        <span class="code">stroke-width:1.5</span>. Herda <span class="code">currentColor</span> e escala por classe utilitária.
+      </p>
+    </header>
+
+    <!-- variantes de tamanho -->
+    <div class="sub-label">Tamanhos (classes utilitárias)</div>
+    <div class="flex flex-wrap items-end gap-8 mb-12 animate-on-scroll fx-rise delay-1" style="color:var(--text)">
+      <div class="text-center"><i data-lucide="sparkles" class="w-3.5 h-3.5"></i><p class="t-caption mt-2">w-3.5</p></div>
+      <div class="text-center"><i data-lucide="sparkles" class="w-4 h-4"></i><p class="t-caption mt-2">w-4</p></div>
+      <div class="text-center"><i data-lucide="sparkles" class="w-5 h-5"></i><p class="t-caption mt-2">w-5</p></div>
+      <div class="text-center"><i data-lucide="sparkles" class="w-8 h-8"></i><p class="t-caption mt-2">w-8</p></div>
+    </div>
+
+    <!-- herança de cor -->
+    <div class="sub-label">Herança de cor (currentColor)</div>
+    <div class="flex flex-wrap items-center gap-8 mb-12 animate-on-scroll fx-rise delay-1">
+      <i data-lucide="bot" class="w-7 h-7" style="color:var(--text)"></i>
+      <i data-lucide="bot" class="w-7 h-7" style="color:var(--azure-300)"></i>
+      <i data-lucide="bot" class="w-7 h-7" style="color:var(--azure)"></i>
+      <i data-lucide="bot" class="w-7 h-7" style="color:var(--bordo-400)"></i>
+      <i data-lucide="bot" class="w-7 h-7" style="color:var(--muted)"></i>
+    </div>
+
+    <!-- inventário usado no site -->
+    <div class="sub-label">Ícones em uso no site</div>
+    <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4 animate-on-scroll fx-rise delay-1" style="color:var(--text)">
+      <div class="panel text-center"><i data-lucide="workflow" class="w-5 h-5"></i><p class="t-caption mt-3">workflow</p></div>
+      <div class="panel text-center"><i data-lucide="target" class="w-5 h-5"></i><p class="t-caption mt-3">target</p></div>
+      <div class="panel text-center"><i data-lucide="bot" class="w-5 h-5"></i><p class="t-caption mt-3">bot</p></div>
+      <div class="panel text-center"><i data-lucide="git-merge" class="w-5 h-5"></i><p class="t-caption mt-3">git-merge</p></div>
+      <div class="panel text-center"><i data-lucide="presentation" class="w-5 h-5"></i><p class="t-caption mt-3">presentation</p></div>
+      <div class="panel text-center"><i data-lucide="sparkles" class="w-5 h-5"></i><p class="t-caption mt-3">sparkles</p></div>
+      <div class="panel text-center"><i data-lucide="arrow-right" class="w-5 h-5"></i><p class="t-caption mt-3">arrow-right</p></div>
+      <div class="panel text-center"><i data-lucide="arrow-up-right" class="w-5 h-5"></i><p class="t-caption mt-3">arrow-up-right</p></div>
+      <div class="panel text-center"><i data-lucide="arrow-up" class="w-5 h-5"></i><p class="t-caption mt-3">arrow-up</p></div>
+      <div class="panel text-center"><i data-lucide="chevron-down" class="w-5 h-5"></i><p class="t-caption mt-3">chevron-down</p></div>
+      <div class="panel text-center"><i data-lucide="check" class="w-5 h-5"></i><p class="t-caption mt-3">check</p></div>
+      <div class="panel text-center"><i data-lucide="plus" class="w-5 h-5"></i><p class="t-caption mt-3">plus</p></div>
+      <div class="panel text-center"><i data-lucide="menu" class="w-5 h-5"></i><p class="t-caption mt-3">menu</p></div>
+      <div class="panel text-center"><i data-lucide="x" class="w-5 h-5"></i><p class="t-caption mt-3">x</p></div>
+      <div class="panel text-center"><i data-lucide="layout-grid" class="w-5 h-5"></i><p class="t-caption mt-3">layout-grid</p></div>
+      <div class="panel text-center"><i data-lucide="shield-check" class="w-5 h-5"></i><p class="t-caption mt-3">shield-check</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= RODAPÉ ======================= -->
+<footer class="sec sec--navy" style="padding-block:clamp(56px,7vw,88px)">
+  <div class="sec-inner">
+    <div class="foot-grid">
+      <div class="foot-col">
+        <a class="brand mb-5" href="#topo">
+          <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+          <span class="brand-word">CINNAMON<span class="brand-thin"> DESIGN SYSTEM</span></span>
+        </a>
+        <p class="t-body-sm mb-6" style="color:var(--muted);max-width:38ch">
+          “Azure Nocturne” — a fonte de verdade viva do site da Cinnamon Services.
+          Reusa <span class="code">cinnamon.css</span> + <span class="code">site.css</span> sem reescrita.
+        </p>
+        <a class="btn-outline" href="#topo">Voltar ao topo <i data-lucide="arrow-up" class="w-4 h-4"></i></a>
+      </div>
+      <div class="foot-col">
+        <h4>Seções</h4>
+        <ul>
+          <li><a href="#tipografia">Tipografia</a></li>
+          <li><a href="#cores">Cores</a></li>
+          <li><a href="#componentes">Componentes</a></li>
+          <li><a href="#layout">Layout</a></li>
+          <li><a href="#movimento">Movimento</a></li>
+          <li><a href="#icones">Ícones</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>Fontes</h4>
+        <ul>
+          <li><a href="#tipografia">Manrope · sans</a></li>
+          <li><a href="#tipografia">Fraunces · serif</a></li>
+          <li><a href="#tipografia">Instrument Serif · editorial</a></li>
+          <li><a href="#tipografia">Syncopate · display</a></li>
+          <li><a href="#tipografia">JetBrains Mono · mono</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>Assets</h4>
+        <ul>
+          <li><a href="#topo">assets/css/cinnamon.css</a></li>
+          <li><a href="#topo">assets/css/site.css</a></li>
+          <li><a href="#topo">assets/js/cinnamon.js</a></li>
+          <li><a href="#topo">assets/js/site.js</a></li>
+          <li><a href="#topo">assets/js/hero-specimen.js</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="foot-bottom">
+      <p class="t-caption">© 2026 · Cinnamon Services — Design System</p>
+      <div class="flex flex-wrap items-center gap-7">
+        <a class="btn-ghost" href="#topo">Voltar ao topo</a>
+      </div>
+    </div>
+
+    <div class="marquee mt-9 pt-7" style="border-top:1px solid var(--line-soft)">
+      <div class="marquee-track">
+        <span>Tipografia</span><span>Cores</span><span>Componentes</span><span>Layout</span><span>Movimento</span><span>Ícones</span><span>Azure Nocturne</span>
+        <span>Tipografia</span><span>Cores</span><span>Componentes</span><span>Layout</span><span>Movimento</span><span>Ícones</span><span>Azure Nocturne</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<button class="float-top" id="floatTop" aria-label="Voltar ao topo" onclick="scrollToTarget(0)">
+  <i data-lucide="arrow-up" class="w-5 h-5"></i>
+</button>
+
+<div id="toast" style="position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);z-index:9200;
+  opacity:0;pointer-events:none;transition:all .4s var(--ease-spring);
+  background:var(--navy-3);border:1px solid rgba(76,126,243,.4);border-radius:999px;padding:10px 20px;
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:#fff;box-shadow:var(--sh-2)">
+  copiado
+</div>
+
+<!-- Harness de replay da galeria de movimento (demonstração, não restyle) -->
+<script>
+function replay(btn, sel){
+  const el = btn.closest('.panel').querySelector(sel);
+  if(!el) return;
+  el.style.animation = 'none';
+  void el.offsetWidth;            /* força reflow → reinicia a animação real */
+  el.style.animation = '';
+}
+function replayWords(btn){
+  const h = btn.closest('.panel').querySelector('.replay-words');
+  if(!h || !window.gsap) return;
+  gsap.fromTo(h.querySelectorAll('.word-inner'),
+    { y:'110%' }, { y:'0%', duration:1, ease:'power3.out', stagger:.04, overwrite:true });
+}
+</script>
+
+<!-- MESMOS scripts do site — as interações são as reais -->
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
+</script>
+<script src="assets/js/cinnamon.js"></script>
+<script src="assets/js/site.js"></script>
+<script type="module" src="assets/js/hero-specimen.js"></script>
+
+</body>
+</html>

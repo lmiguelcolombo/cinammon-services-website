@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Cinnamon Services — IA e automação para empresas</title>
+<meta name="description" content="A Cinnamon implementa sistemas de IA e automação que geram demanda, fecham negócios e escalam operação. Do mapeamento ao sistema em produção."/>
+<meta name="theme-color" content="#0A0B0D"/>
+<link rel="canonical" href="https://cinammonservices.com/"/>
+
+<meta property="og:type" content="website"/>
+<meta property="og:locale" content="pt_BR"/>
+<meta property="og:site_name" content="Cinnamon Services"/>
+<meta property="og:title" content="Cinnamon Services — IA e automação para empresas"/>
+<meta property="og:description" content="Sistemas de IA que geram demanda, fecham negócios e escalam operação."/>
+<meta name="twitter:card" content="summary_large_image"/>
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230A0B0D'/%3E%3Cg fill='%234C7EF3'%3E%3Ccircle cx='10' cy='11' r='1.7'/%3E%3Ccircle cx='16' cy='8' r='1.7'/%3E%3Ccircle cx='22' cy='12' r='1.7'/%3E%3Ccircle cx='12' cy='17' r='1.7'/%3E%3Ccircle cx='20' cy='18' r='1.7'/%3E%3C/g%3E%3Cg fill='%23A63348'%3E%3Ccircle cx='11' cy='23' r='1.7'/%3E%3Ccircle cx='17' cy='24' r='1.7'/%3E%3C/g%3E%3C/svg%3E"/>
+
+<!-- Fontes — mesma estratégia do design system -->
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Instrument+Serif:ital@0;1&family=Syncopate:wght@400;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/@studio-freight/lenis@1.0.33/dist/lenis.min.js"></script>
+
+<script>
+tailwind.config = {
+  theme: { extend: {
+    colors: {
+      brand:  { ink:'#0A0B0D', navy:'#111A2B', navy2:'#0D1420', line:'#1E2E4A',
+                azure:'#4C7EF3', bordo:'#A63348', paper:'#F6F5F3' },
+      azure:  { 100:'#E4EDFF',200:'#C9DBFF',300:'#A8C4FF',400:'#7BA4FF',
+                500:'#4C7EF3',600:'#2E5BD0',700:'#1E3E93',900:'#16264F' },
+      bordo:  { 300:'#D98494',400:'#C25A70',500:'#A63348',600:'#7B1E32',700:'#5A1424',900:'#3A0C17' },
+      navy:   { 400:'#1E2E4A',500:'#16233A',600:'#111A2B',700:'#0D1420',900:'#0A0B0D' },
+    },
+    fontFamily: {
+      sans:['Manrope','system-ui','sans-serif'], serif:['Fraunces','Georgia','serif'],
+      editorial:['Instrument Serif','Georgia','serif'], display:['Syncopate','sans-serif'],
+      mono:['JetBrains Mono','monospace'],
+    }
+  }}
+};
+</script>
+
+<link rel="stylesheet" href="assets/css/cinnamon.css"/>
+<link rel="stylesheet" href="assets/css/site.css"/>
+</head>
+
+<body>
+
+<!-- ======================= UTILIDADES GLOBAIS ======================= -->
+<div class="scroll-progress" id="progress"></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="spotlight" id="spotlight" aria-hidden="true"></div>
+<div class="gradient-blur" aria-hidden="true"><div></div><div></div><div></div><div></div></div>
+
+<div class="loader" id="loader">
+  <div class="loader-text">CINNAMON</div>
+  <div class="loader-sub">ia · automação · sistemas</div>
+  <div class="loader-bar" id="loaderBar"></div>
+</div>
+
+<!-- ======================= NAVBAR ======================= -->
+<header class="topbar" id="topbar">
+  <a class="brand" href="#topo" aria-label="Cinnamon Services — início">
+    <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+    <span class="brand-word">CINNAMON<span class="brand-thin"> SERVICES</span></span>
+  </a>
+
+  <nav class="topnav" aria-label="Primária">
+    <a href="#servicos" data-nav>Serviços</a>
+    <a href="#cases" data-nav>Cases</a>
+    <a href="#time" data-nav>Time</a>
+    <a href="#processo" data-nav>Processo</a>
+    <a href="#perguntas" data-nav>Perguntas</a>
+  </nav>
+
+  <div class="flex items-center gap-3">
+    <a class="topbuy" href="#contato">
+      <span class="buy-label">Vamos</span>
+      <span class="buy-price">conversar</span>
+    </a>
+    <button class="nav-toggle" id="navToggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="navDrawer">
+      <i data-lucide="menu" class="w-5 h-5"></i>
+    </button>
+  </div>
+</header>
+
+<!-- menu mobile -->
+<div class="nav-drawer" id="navDrawer" aria-hidden="true">
+  <a href="#servicos"><span>01</span> Serviços</a>
+  <a href="#cases"><span>02</span> Cases</a>
+  <a href="#time"><span>03</span> Time</a>
+  <a href="#processo"><span>04</span> Processo</a>
+  <a href="#perguntas"><span>05</span> Perguntas</a>
+  <div class="drawer-foot">
+    <p class="t-caption">Sessão gratuita de 30 minutos para mapear onde a IA move o ponteiro no seu negócio.</p>
+    <a class="button-custom" href="#contato" style="width:fit-content">
+      <div class="points_wrapper" aria-hidden="true"><i class="point"></i><i class="point"></i><i class="point"></i><i class="point"></i><i class="point"></i></div>
+      <span class="inner">Agendar sessão <i data-lucide="arrow-right" class="icon"></i></span>
+    </a>
+  </div>
+</div>
+
+<!-- ======================= 00 · HERO ======================= -->
+<section class="hero" id="topo">
+  <div class="aurora" aria-hidden="true"></div>
+  <div class="dotgrid" aria-hidden="true"></div>
+
+  <div class="gridlines" aria-hidden="true">
+    <div class="gl"><span class="gl-num">01</span></div>
+    <div class="gl">
+      <div class="beam beam--soft animate-beam-1" style="left:-1px"></div>
+      <span class="gl-num">02</span>
+    </div>
+    <div class="gl">
+      <div class="gl-dash"></div>
+      <div class="beam animate-beam-2" style="left:-1px"></div>
+      <div class="beam beam--bordo animate-beam-4" style="left:50%"></div>
+      <span class="gl-num" style="color:rgba(76,126,243,.3)">03</span>
+    </div>
+    <div class="gl">
+      <div class="beam beam--soft animate-beam-3" style="left:-1px"></div>
+      <span class="gl-num">04</span>
+    </div>
+    <div class="gl"><span class="gl-num">05</span></div>
+  </div>
+
+  <canvas id="scene" width="1920" height="1080" aria-hidden="true" data-engine="three.js r160"></canvas>
+  <div class="hero-poster" id="poster" aria-hidden="true"><div class="poster-glyph">C</div></div>
+  <div class="hero-vignette" aria-hidden="true"></div>
+
+  <div class="specimen-hud" aria-hidden="true">
+    <div class="hud-block hud-tl"><span class="hud-cap">Fundindo</span><span class="hud-glyph" id="hudGlyph">C</span></div>
+    <div class="hud-block hud-tr"><span class="hud-cap">Partículas</span><span class="hud-val hud-fig" id="hudCount">42.000</span></div>
+    <div class="hud-block hud-bl"><span class="hud-cap">Estado</span><span class="hud-val" id="hudState">fundido</span></div>
+    <div class="hud-block hud-br"><span class="hud-cap">Cinnamon Services</span><span class="hud-val hud-fig">IA aplicada · Brasil</span></div>
+  </div>
+
+  <div class="hero-overlay">
+    <div class="hero-kicker"><span class="kick-dot" aria-hidden="true"></span> Parceiro de IA para empresas B2B</div>
+    <h1 class="hero-h1">
+      <span class="h1-line h1-grad">IA que gera</span>
+      <span class="h1-line"><span class="h1-accent">receita</span>, não demo.</span>
+    </h1>
+    <p class="hero-lede">
+      Sistemas de IA que <strong>geram leads, fecham negócios e escalam operação</strong>.
+      Do mapeamento do funil ao sistema rodando em produção — construídos por um time
+      que já implementou isso em <span class="ph">aqui a quantidade de setores atendidos</span>.
+    </p>
+
+    <div class="hero-cta">
+      <a class="btn-glass group" href="#contato">
+        <span class="beam-ring" aria-hidden="true"><i></i></span>
+        <span class="glass-fill" aria-hidden="true"></span>
+        <span class="glass-body">
+          <span style="width:28px;height:28px;border-radius:50%;display:grid;place-items:center;flex:none;
+                       background:linear-gradient(180deg,var(--azure-400),var(--azure-600));
+                       box-shadow:0 6px 18px var(--azure-glow);border:1px solid rgba(255,255,255,.22);"
+                class="transition-transform duration-300 group-hover:scale-110">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-white"></i>
+          </span>
+          <span class="whitespace-nowrap tracking-tight">Mapear meu funil</span>
+          <span style="width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.10);display:grid;place-items:center;flex:none"
+                class="group-hover:translate-x-0.5 transition-transform">
+            <i data-lucide="arrow-right" class="w-3 h-3"></i>
+          </span>
+        </span>
+      </a>
+
+      <button class="shiny-cta" type="button" onclick="scrollToTarget('#servicos',-70)">
+        <span>Ver serviços <i data-lucide="layout-grid" class="w-4 h-4"></i></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="specimen-controls" role="group" aria-label="Escolher o glifo do specimen">
+    <button class="glyph-btn is-active" data-g="C">C</button>
+    <button class="glyph-btn" data-g="S">S</button>
+    <button class="glyph-btn" data-g="✦">✦</button>
+    <button class="glyph-btn" data-g="@">@</button>
+    <button class="glyph-btn glyph-btn--wide" id="autoBtn" aria-pressed="true">
+      <span class="auto-tick" aria-hidden="true"></span> auto
+    </button>
+  </div>
+
+  <p class="hero-hint" id="heroHint">mova sobre a letra para esculpir · clique para refundir</p>
+</section>
+
+<!-- ======================= MÉTRICAS ======================= -->
+<div class="metrics">
+  <div class="metric animate-on-scroll fx-rise">
+    <span class="metric-fig"><span class="ph ph--fig">00</span></span>
+    <span class="metric-label">aqui a métrica de receita gerada para clientes</span>
+  </div>
+  <div class="metric animate-on-scroll fx-rise delay-1">
+    <span class="metric-fig"><span class="ph ph--fig">00</span></span>
+    <span class="metric-label">aqui o número de setores atendidos</span>
+  </div>
+  <div class="metric animate-on-scroll fx-rise delay-2">
+    <span class="metric-fig"><span class="ph ph--fig">00</span></span>
+    <span class="metric-label">aqui o número de processos automatizados</span>
+  </div>
+  <div class="metric animate-on-scroll fx-rise delay-3">
+    <span class="metric-fig"><span class="ph ph--fig">00</span></span>
+    <span class="metric-label">aqui os anos construindo com IA</span>
+  </div>
+</div>
+
+<!-- ======================= PROVA SOCIAL ======================= -->
+<section style="position:relative;z-index:2;background:var(--navy-2);border-bottom:1px solid var(--line-soft);
+                padding:clamp(30px,4vw,46px) clamp(18px,4.5vw,56px)">
+  <div class="sec-inner">
+    <p class="t-label text-center mb-6">Empresas que já trabalharam com a gente</p>
+    <div class="logos">
+      <span class="logo-slot">logo cliente 01</span>
+      <span class="logo-slot">logo cliente 02</span>
+      <span class="logo-slot">logo cliente 03</span>
+      <span class="logo-slot">logo cliente 04</span>
+      <span class="logo-slot">logo cliente 05</span>
+      <span class="logo-slot">logo cliente 06</span>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 01 · RESULTADOS / CASES ======================= -->
+<section class="sec" id="cases">
+  <div class="aurora" aria-hidden="true"></div>
+  <div class="gridlines" aria-hidden="true">
+    <div class="gl"></div>
+    <div class="gl"><div class="beam beam--soft animate-beam-3" style="left:-1px"></div></div>
+    <div class="gl"><div class="gl-dash"></div></div>
+    <div class="gl"><div class="beam beam--bordo animate-beam-2" style="left:-1px"></div></div>
+    <div class="gl"></div>
+  </div>
+
+  <div class="sec-inner">
+    <header class="sec-head animate-on-scroll fx-rise">
+      <div class="sec-idx">01 · Resultados</div>
+      <h2 class="t-h2 split-animate">O sistema entra onde o dinheiro já passa.</h2>
+      <p class="sec-sub">
+        A gente não começa pela tecnologia — começa pelo ponto do seu funil onde o valor está vazando.
+        Depois constrói a peça que fecha esse buraco, coloca em produção e mede.
+        <span class="ph">aqui um parágrafo com a síntese dos resultados agregados da Cinnamon</span>
+      </p>
+    </header>
+
+    <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-5">
+      <article class="case animate-on-scroll fx-rise">
+        <span class="case-tag">Case 01 · <span class="ph">segmento</span></span>
+        <h3><span class="ph">nome do cliente</span></h3>
+        <p><span class="ph ph--block">aqui a descrição do case: qual era o gargalo, o que foi construído e qual foi o resultado medido</span></p>
+        <div class="case-foot">
+          <span class="badge badge--outline"><span class="badge-dot"></span> <span class="ph">resultado</span></span>
+          <i data-lucide="arrow-up-right" class="case-arrow w-5 h-5"></i>
+        </div>
+      </article>
+
+      <article class="case animate-on-scroll fx-rise delay-1">
+        <span class="case-tag">Case 02 · <span class="ph">segmento</span></span>
+        <h3><span class="ph">nome do cliente</span></h3>
+        <p><span class="ph ph--block">aqui a descrição do case: qual era o gargalo, o que foi construído e qual foi o resultado medido</span></p>
+        <div class="case-foot">
+          <span class="badge badge--outline"><span class="badge-dot"></span> <span class="ph">resultado</span></span>
+          <i data-lucide="arrow-up-right" class="case-arrow w-5 h-5"></i>
+        </div>
+      </article>
+
+      <article class="case animate-on-scroll fx-rise delay-2">
+        <span class="case-tag">Case 03 · <span class="ph">segmento</span></span>
+        <h3><span class="ph">nome do cliente</span></h3>
+        <p><span class="ph ph--block">aqui a descrição do case: qual era o gargalo, o que foi construído e qual foi o resultado medido</span></p>
+        <div class="case-foot">
+          <span class="badge badge--outline"><span class="badge-dot"></span> <span class="ph">resultado</span></span>
+          <i data-lucide="arrow-up-right" class="case-arrow w-5 h-5"></i>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 02 · SERVIÇOS ======================= -->
+<section class="sec sec--navy" id="servicos">
+  <div class="aurora aurora--warm" aria-hidden="true"></div>
+
+  <div class="sec-inner">
+    <header class="sec-head animate-on-scroll fx-rise">
+      <div class="sec-idx">02 · Serviços</div>
+      <h2 class="t-h2 split-animate">Cinco frentes, um sistema só.</h2>
+      <p class="sec-sub">
+        Cada frente resolve um pedaço do ciclo: atrair, qualificar, atender, fechar e operar.
+        Elas funcionam sozinhas, mas <strong>rendem muito mais combinadas</strong> — porque compartilham
+        os mesmos dados e a mesma fonte de verdade.
+      </p>
+    </header>
+
+    <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-5">
+      <article class="sol animate-on-scroll fx-rise">
+        <span class="sol-icon"><i data-lucide="workflow" class="w-5 h-5"></i></span>
+        <i data-lucide="arrow-up-right" class="sol-arrow w-5 h-5"></i>
+        <h3 class="t-h4 mb-2" style="font-size:1.25rem">Automação com IA</h3>
+        <p class="t-body-sm" style="color:var(--muted)">
+          Tarefas repetitivas que hoje consomem horas do time viram fluxo automático,
+          com validação humana onde importa.
+        </p>
+        <p class="sol-example">ex.: triagem de documentos, atualização de status, relatórios recorrentes</p>
+      </article>
+
+      <article class="sol animate-on-scroll fx-rise delay-1">
+        <span class="sol-icon"><i data-lucide="target" class="w-5 h-5"></i></span>
+        <i data-lucide="arrow-up-right" class="sol-arrow w-5 h-5"></i>
+        <h3 class="t-h4 mb-2" style="font-size:1.25rem">Geração de leads com IA</h3>
+        <p class="t-body-sm" style="color:var(--muted)">
+          Prospecção que encontra, enriquece e prioriza contatos — e chega no time comercial
+          já com contexto suficiente para a primeira conversa.
+        </p>
+        <p class="sol-example">ex.: listas enriquecidas, cadências personalizadas, scoring de intenção</p>
+      </article>
+
+      <article class="sol animate-on-scroll fx-rise delay-2">
+        <span class="sol-icon"><i data-lucide="bot" class="w-5 h-5"></i></span>
+        <i data-lucide="arrow-up-right" class="sol-arrow w-5 h-5"></i>
+        <h3 class="t-h4 mb-2" style="font-size:1.25rem">Agentes de IA sob medida</h3>
+        <p class="t-body-sm" style="color:var(--muted)">
+          Agentes construídos para o seu processo, com as suas regras e os seus limites —
+          não um chatbot genérico com a sua logo em cima.
+        </p>
+        <p class="sol-example">ex.: recepção, triagem, suporte interno, copiloto de operação</p>
+      </article>
+
+      <article class="sol animate-on-scroll fx-rise delay-3">
+        <span class="sol-icon"><i data-lucide="git-merge" class="w-5 h-5"></i></span>
+        <i data-lucide="arrow-up-right" class="sol-arrow w-5 h-5"></i>
+        <h3 class="t-h4 mb-2" style="font-size:1.25rem">CRM e automação de vendas</h3>
+        <p class="t-body-sm" style="color:var(--muted)">
+          O funil parando de depender da memória de quem vende: registro automático,
+          follow-up no tempo certo e visibilidade real do pipeline.
+        </p>
+        <p class="sol-example">ex.: integração com CRM, follow-up automático, higienização de base</p>
+      </article>
+
+      <article class="sol animate-on-scroll fx-rise delay-4">
+        <span class="sol-icon"><i data-lucide="presentation" class="w-5 h-5"></i></span>
+        <i data-lucide="arrow-up-right" class="sol-arrow w-5 h-5"></i>
+        <h3 class="t-h4 mb-2" style="font-size:1.25rem">Workshops de IA</h3>
+        <p class="t-body-sm" style="color:var(--muted)">
+          Treinamento prático para o seu time parar de brincar com prompt e começar a
+          resolver problema de verdade com as ferramentas que já tem.
+        </p>
+        <p class="sol-example">ex.: turmas fechadas, trilha por área, material que fica com a empresa</p>
+      </article>
+
+      <article class="sol animate-on-scroll fx-rise delay-5" style="background:linear-gradient(180deg,var(--navy),var(--navy-2));border-color:var(--azure)">
+        <span class="sol-icon" style="background:rgba(76,126,243,.22)"><i data-lucide="sparkles" class="w-5 h-5"></i></span>
+        <h3 class="t-h4 mb-2" style="font-size:1.25rem">Não sabe por onde começar?</h3>
+        <p class="t-body-sm mb-5" style="color:var(--muted)">
+          É o caso mais comum. A sessão de mapeamento existe exatamente para isso —
+          e ela é gratuita.
+        </p>
+        <a class="btn-ghost mt-auto" href="#contato">Mapear meu funil <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i></a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 03 · POR QUE A CINNAMON ======================= -->
+<section class="sec" id="porque">
+  <div class="aurora" aria-hidden="true"></div>
+  <div class="dotgrid" aria-hidden="true"></div>
+
+  <div class="sec-inner">
+    <div class="grid lg:grid-cols-[minmax(0,380px)_1fr] gap-10 lg:gap-20 items-start">
+      <header class="sec-head animate-on-scroll fx-rise" style="margin-bottom:0">
+        <div class="sec-idx">03 · Por que a Cinnamon</div>
+        <h2 class="t-h3">Quatro razões que aparecem em toda proposta.</h2>
+        <p class="sec-sub" style="font-size:.95rem">
+          Nenhuma delas é “usamos a IA mais avançada do mercado”. Essa parte todo mundo usa.
+        </p>
+      </header>
+
+      <div class="grid sm:grid-cols-2 gap-4 animate-on-scroll fx-rise delay-1">
+        <article class="card card--topline">
+          <span class="t-label mb-4 block">R/01</span>
+          <h3 class="t-h4 mb-2" style="font-size:1.15rem">Construímos com IA desde <span class="ph">ano</span></h3>
+          <p class="t-body-sm" style="color:var(--muted)">
+            Não é uma frente nova aberta na onda do hype. <span class="ph">aqui um texto sobre o histórico técnico do time</span>
+          </p>
+        </article>
+
+        <article class="card card--topline">
+          <span class="t-label mb-4 block">R/02</span>
+          <h3 class="t-h4 mb-2" style="font-size:1.15rem">Preço fechado, sem surpresa</h3>
+          <p class="t-body-sm" style="color:var(--muted)">
+            Escopo e valor definidos antes de começar. Você aprova o que vai receber e por quanto,
+            e não recebe fatura de hora extra no meio do projeto.
+          </p>
+        </article>
+
+        <article class="card card--topline">
+          <span class="t-label mb-4 block">R/03</span>
+          <h3 class="t-h4 mb-2" style="font-size:1.15rem">Histórico público</h3>
+          <p class="t-body-sm" style="color:var(--muted)">
+            <span class="ph">aqui um texto sobre onde o trabalho da Cinnamon pode ser verificado publicamente — canais, conteúdo, comunidade</span>
+          </p>
+        </article>
+
+        <article class="card card--topline card--bordo">
+          <span class="t-label mb-4 block">R/04</span>
+          <h3 class="t-h4 mb-2" style="font-size:1.15rem">Usamos os nossos próprios sistemas</h3>
+          <p class="t-body-sm" style="color:var(--muted)">
+            O que a gente vende roda dentro de casa primeiro. Se um fluxo não aguenta a nossa
+            operação, ele não é oferecido para a sua.
+          </p>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 04 · TIME ======================= -->
+<section class="sec sec--navy" id="time">
+  <div class="aurora aurora--warm" aria-hidden="true"></div>
+
+  <div class="sec-inner">
+    <header class="sec-head animate-on-scroll fx-rise">
+      <div class="sec-idx">04 · Time</div>
+      <h2 class="t-h2 split-animate">Quem constrói o seu sistema.</h2>
+      <p class="sec-sub">
+        Time pequeno e sênior, sem camada de gerente entre você e quem escreve o código.
+        Você fala com as mesmas pessoas do começo ao fim do projeto.
+      </p>
+    </header>
+
+    <div class="grid md:grid-cols-3 gap-5">
+      <article class="bio animate-on-scroll fx-rise">
+        <div class="bio-avatar">A</div>
+        <h3><span class="ph">nome</span></h3>
+        <span class="bio-role"><span class="ph">cargo</span></span>
+        <p><span class="ph ph--block">aqui a bio: trajetória, especialidade e o que essa pessoa entrega nos projetos</span></p>
+      </article>
+
+      <article class="bio animate-on-scroll fx-rise delay-1">
+        <div class="bio-avatar">B</div>
+        <h3><span class="ph">nome</span></h3>
+        <span class="bio-role"><span class="ph">cargo</span></span>
+        <p><span class="ph ph--block">aqui a bio: trajetória, especialidade e o que essa pessoa entrega nos projetos</span></p>
+      </article>
+
+      <article class="bio animate-on-scroll fx-rise delay-2">
+        <div class="bio-avatar">C</div>
+        <h3><span class="ph">nome</span></h3>
+        <span class="bio-role"><span class="ph">cargo</span></span>
+        <p><span class="ph ph--block">aqui a bio: trajetória, especialidade e o que essa pessoa entrega nos projetos</span></p>
+      </article>
+    </div>
+
+    <div class="rule"></div>
+
+    <!-- conteúdo / educação -->
+    <div class="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+      <div class="animate-on-scroll fx-rise">
+        <div class="sub-label">Conteúdo e educação</div>
+        <h3 class="t-h3 mb-5">A gente ensina o que faz.</h3>
+        <p class="t-body-lg mb-6" style="color:rgba(233,231,228,.75)">
+          Boa parte do que construímos vira material aberto. É assim que o mercado descobre
+          o nosso trabalho antes de virar cliente — e é assim que o nosso time se mantém afiado.
+        </p>
+        <p class="t-body mb-7" style="color:var(--muted)">
+          <span class="ph">aqui um texto sobre os canais de conteúdo da Cinnamon: onde publica, para quem e com que frequência</span>
+        </p>
+        <a class="btn-outline" href="#contato">Levar um workshop para o meu time <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4 animate-on-scroll fx-rise delay-2">
+        <div class="panel panel--azure">
+          <span class="ph ph--fig mb-3">00</span>
+          <p class="t-caption">aqui a métrica de visualizações</p>
+        </div>
+        <div class="panel panel--azure">
+          <span class="ph ph--fig mb-3">00</span>
+          <p class="t-caption">aqui a métrica de inscritos</p>
+        </div>
+        <div class="panel panel--bordo">
+          <span class="ph ph--fig mb-3">00</span>
+          <p class="t-caption">aqui a métrica de alunos formados</p>
+        </div>
+        <div class="panel panel--bordo">
+          <span class="ph ph--fig mb-3">00</span>
+          <p class="t-caption">aqui a métrica de workshops realizados</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 05 · PROCESSO ======================= -->
+<section class="sec" id="processo">
+  <div class="aurora" aria-hidden="true"></div>
+
+  <div class="sec-inner">
+    <header class="sec-head animate-on-scroll fx-rise">
+      <div class="sec-idx">05 · Processo</div>
+      <h2 class="t-h2 split-animate">Quatro passos, do mapa ao sistema no ar.</h2>
+      <p class="sec-sub">
+        Sem descoberta de três meses e sem apresentação de 80 slides.
+        O primeiro passo é gratuito e leva meia hora.
+      </p>
+    </header>
+
+    <div class="grid md:grid-cols-2 xl:grid-cols-4 gap-6">
+      <div class="group-step animate-on-scroll fx-rise">
+        <div class="step-circle">01</div>
+        <div class="flex items-baseline gap-3 mb-2">
+          <h3 class="t-h4" style="font-size:1.2rem">Mapa do funil</h3>
+          <span class="tag-inline tag-inline--now">grátis · 30 min</span>
+        </div>
+        <p class="t-body-sm" style="color:var(--muted)">
+          Uma sessão para auditar o seu funil, identificar os gargalos e apontar onde a IA
+          realmente move o ponteiro — e onde não move.
+        </p>
+      </div>
+
+      <div class="group-step animate-on-scroll fx-rise delay-1">
+        <div class="step-circle">02</div>
+        <div class="flex items-baseline gap-3 mb-2">
+          <h3 class="t-h4" style="font-size:1.2rem">Proposta</h3>
+        </div>
+        <p class="t-body-sm" style="color:var(--muted)">
+          Escopo claro, prazo definido e preço fechado. Você sabe exatamente o que recebe,
+          quando recebe e quanto custa antes de assinar.
+        </p>
+      </div>
+
+      <div class="group-step animate-on-scroll fx-rise delay-2">
+        <div class="step-circle">03</div>
+        <div class="flex items-baseline gap-3 mb-2">
+          <h3 class="t-h4" style="font-size:1.2rem">Projeto</h3>
+        </div>
+        <p class="t-body-sm" style="color:var(--muted)">
+          O time constrói, testa e coloca em produção, com atualização semanal.
+          Nada de sumir por seis semanas e reaparecer com uma entrega surpresa.
+        </p>
+      </div>
+
+      <div class="group-step animate-on-scroll fx-rise delay-3">
+        <div class="step-circle">04</div>
+        <div class="flex items-baseline gap-3 mb-2">
+          <h3 class="t-h4" style="font-size:1.2rem">Gestão contínua</h3>
+          <span class="tag-inline">opcional</span>
+        </div>
+        <p class="t-body-sm" style="color:var(--muted)">
+          Retainer opcional para monitorar, ajustar e evoluir o sistema conforme a operação
+          muda. Só faz sentido para quem quer continuar escalando.
+        </p>
+      </div>
+    </div>
+
+    <div class="rule"></div>
+
+    <!-- investimento -->
+    <div class="grid lg:grid-cols-[minmax(0,400px)_1fr] gap-10 lg:gap-20 items-start">
+      <div class="animate-on-scroll fx-rise">
+        <div class="sub-label">Investimento</div>
+        <h3 class="t-h3 mb-5">Preço fechado por projeto.</h3>
+        <p class="t-body" style="color:var(--muted)">
+          Não cobramos por hora. Cada projeto tem escopo e valor definidos na proposta,
+          e o valor depende do tamanho do sistema — não do tempo que a gente leva para construí-lo.
+        </p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-4 animate-on-scroll fx-rise delay-1">
+        <article class="card card-featured" style="position:relative">
+          <span class="card-flag">ponto de partida</span>
+          <p class="t-label mb-3 mt-2">Projetos a partir de</p>
+          <span class="ph ph--fig mb-4">aqui o valor mínimo</span>
+          <p class="t-body-sm" style="color:var(--muted)">
+            <span class="ph ph--block">aqui um texto sobre o que cabe em um projeto de entrada</span>
+          </p>
+        </article>
+
+        <article class="card">
+          <p class="t-label mb-3">Faixa mais comum</p>
+          <span class="ph ph--fig mb-4">aqui a faixa de valores</span>
+          <p class="t-body-sm" style="color:var(--muted)">
+            <span class="ph ph--block">aqui um texto sobre o que caracteriza um projeto dessa faixa</span>
+          </p>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 06 · PERGUNTAS ======================= -->
+<section class="sec sec--navy" id="perguntas">
+  <div class="aurora" aria-hidden="true"></div>
+
+  <div class="sec-inner">
+    <div class="grid lg:grid-cols-[minmax(0,380px)_1fr] gap-10 lg:gap-20 items-start">
+      <header class="sec-head animate-on-scroll fx-rise" style="margin-bottom:0">
+        <div class="sec-idx">06 · Perguntas</div>
+        <h2 class="t-h3">As que aparecem em toda primeira conversa.</h2>
+        <p class="sec-sub" style="font-size:.95rem">
+          Se a sua não estiver aqui, ela cabe nos 30 minutos.
+        </p>
+      </header>
+
+      <div class="faq animate-on-scroll fx-rise delay-1">
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            Quanto tempo leva para o sistema estar rodando?
+            <span class="faq-icon" aria-hidden="true"><i data-lucide="plus" class="w-4 h-4"></i></span>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">
+            <p>Depende do escopo, e o prazo entra na proposta antes de você assinar.
+              <span class="ph">aqui a faixa de prazo típica dos projetos</span></p>
+            <p>O que costuma atrasar não é a construção: é o acesso aos dados e às ferramentas
+              que já existem na sua operação. Por isso pedimos isso logo no início.</p>
+          </div></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            Preciso ter dados organizados para começar?
+            <span class="faq-icon" aria-hidden="true"><i data-lucide="plus" class="w-4 h-4"></i></span>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">
+            <p>Não. Praticamente nenhum cliente chega com a casa arrumada — e organizar isso
+              costuma ser parte do projeto. <strong>Se os seus dados estivessem organizados,
+              você provavelmente não precisaria da gente.</strong></p>
+          </div></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            Isso substitui pessoas do meu time?
+            <span class="faq-icon" aria-hidden="true"><i data-lucide="plus" class="w-4 h-4"></i></span>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">
+            <p>Na prática, o que acontece é o time parar de fazer a parte mecânica e passar a
+              fazer a parte que exige julgamento. Os projetos que mais deram certo foram os
+              que aumentaram a capacidade da equipe atual em vez de reduzi-la.</p>
+          </div></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            Vocês trabalham com quais ferramentas?
+            <span class="faq-icon" aria-hidden="true"><i data-lucide="plus" class="w-4 h-4"></i></span>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">
+            <p>Nos integramos ao que você já usa em vez de forçar migração.
+              <span class="ph">aqui a lista de ferramentas, modelos e integrações suportadas</span></p>
+          </div></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            E os meus dados? Ficam seguros?
+            <span class="faq-icon" aria-hidden="true"><i data-lucide="plus" class="w-4 h-4"></i></span>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">
+            <p><span class="ph ph--block">aqui a política de dados da Cinnamon: onde os dados ficam, quem acessa, o que é usado para treinar e como isso se encaixa na LGPD</span></p>
+          </div></div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            O que acontece depois que o projeto acaba?
+            <span class="faq-icon" aria-hidden="true"><i data-lucide="plus" class="w-4 h-4"></i></span>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">
+            <p>O sistema é seu: fica na sua infraestrutura, com a documentação de como opera.
+              Se quiser que a gente continue cuidando, existe o retainer do passo 04 — mas ele é
+              opcional, e nunca é condição para o sistema continuar funcionando.</p>
+          </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 07 · CONTATO ======================= -->
+<section class="sec" id="contato">
+  <div class="aurora aurora--warm" aria-hidden="true"></div>
+  <div class="gridlines" aria-hidden="true">
+    <div class="gl"></div>
+    <div class="gl"><div class="beam beam--bordo animate-beam-3" style="left:-1px"></div></div>
+    <div class="gl"><div class="gl-dash"></div></div>
+    <div class="gl"><div class="beam animate-beam-1" style="left:-1px"></div></div>
+    <div class="gl"></div>
+  </div>
+
+  <div class="sec-inner">
+    <header class="sec-head animate-on-scroll fx-rise">
+      <div class="sec-idx">07 · Vamos conversar</div>
+      <h2 class="t-h2 split-animate">Trinta minutos, de graça, sem slide.</h2>
+      <p class="sec-sub">
+        Uma sessão de mapeamento do funil: a gente audita o caminho que o seu cliente percorre,
+        acha os gargalos e mostra exatamente onde a IA move o ponteiro.
+        <strong>Se não fizer sentido para o seu caso, a gente diz na hora</strong> — sai mais barato para nós dois.
+      </p>
+    </header>
+
+    <div class="contact-wrap">
+      <!-- FORMULÁRIO
+           TODO (integração): apontar para o endpoint/serviço escolhido
+           ou trocar o handler em site.js por um fetch para a sua API. -->
+      <form class="animate-on-scroll fx-rise" id="contactForm" novalidate>
+        <div class="form-grid">
+          <div class="form-field">
+            <label class="t-label" for="f-nome">Nome</label>
+            <input class="field" id="f-nome" name="nome" type="text" placeholder="Como podemos te chamar" required/>
+          </div>
+          <div class="form-field">
+            <label class="t-label" for="f-empresa">Empresa</label>
+            <input class="field" id="f-empresa" name="empresa" type="text" placeholder="Nome da empresa" required/>
+          </div>
+          <div class="form-field">
+            <label class="t-label" for="f-email">E-mail corporativo</label>
+            <input class="field" id="f-email" name="email" type="email" placeholder="voce@empresa.com.br" required/>
+          </div>
+          <div class="form-field">
+            <label class="t-label" for="f-whats">WhatsApp</label>
+            <input class="field" id="f-whats" name="whatsapp" type="tel" placeholder="(00) 00000-0000" required/>
+          </div>
+
+          <div class="form-field full">
+            <label class="t-label" for="f-frente">Frente de maior interesse</label>
+            <div class="cs" id="csFrente">
+              <button type="button" class="field cs-trigger flex items-center justify-between" aria-haspopup="listbox" aria-expanded="false" onclick="toggleSelect(this)">
+                <span class="cs-value" style="color:var(--faint)">Selecione — se não souber, tudo bem</span>
+                <i data-lucide="chevron-down" class="cs-chevron w-4 h-4" style="color:var(--muted)"></i>
+              </button>
+              <div class="cs-panel" role="listbox" aria-label="Frente">
+                <button type="button" class="cs-option" role="option" aria-selected="false" data-value="Automação com IA" onclick="pickOption(this)">
+                  Automação com IA <i data-lucide="check" class="cs-check w-4 h-4"></i>
+                </button>
+                <button type="button" class="cs-option" role="option" aria-selected="false" data-value="Geração de leads com IA" onclick="pickOption(this)">
+                  Geração de leads com IA <i data-lucide="check" class="cs-check w-4 h-4"></i>
+                </button>
+                <button type="button" class="cs-option" role="option" aria-selected="false" data-value="Agentes de IA sob medida" onclick="pickOption(this)">
+                  Agentes de IA sob medida <i data-lucide="check" class="cs-check w-4 h-4"></i>
+                </button>
+                <button type="button" class="cs-option" role="option" aria-selected="false" data-value="CRM e automação de vendas" onclick="pickOption(this)">
+                  CRM e automação de vendas <i data-lucide="check" class="cs-check w-4 h-4"></i>
+                </button>
+                <button type="button" class="cs-option" role="option" aria-selected="false" data-value="Workshops de IA" onclick="pickOption(this)">
+                  Workshops de IA <i data-lucide="check" class="cs-check w-4 h-4"></i>
+                </button>
+                <button type="button" class="cs-option" role="option" aria-selected="false" data-value="Ainda não sei" onclick="pickOption(this)">
+                  Ainda não sei <i data-lucide="check" class="cs-check w-4 h-4"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-field full">
+            <label class="t-label" for="f-msg">Onde está o gargalo hoje</label>
+            <textarea class="field" id="f-msg" name="mensagem" placeholder="O que trava o seu funil hoje? O que você já tentou resolver e não funcionou?"></textarea>
+          </div>
+        </div>
+
+        <div class="form-note">
+          <i data-lucide="shield-check" class="w-4 h-4"></i>
+          <p class="t-helper" style="margin:0">
+            Usamos seus dados só para retornar o contato. Nada de lista de disparo.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-4 mt-7">
+          <button class="button-custom" type="submit">
+            <div class="points_wrapper" aria-hidden="true"><i class="point"></i><i class="point"></i><i class="point"></i><i class="point"></i><i class="point"></i><i class="point"></i><i class="point"></i></div>
+            <span class="inner">Agendar sessão gratuita <i data-lucide="arrow-right" class="icon"></i></span>
+          </button>
+          <p class="t-caption" id="formStatus" role="status" aria-live="polite"></p>
+        </div>
+      </form>
+
+      <aside class="contact-aside animate-on-scroll fx-rise delay-2">
+        <span class="badge badge--outline mb-6"><span class="badge-dot"></span> 30 minutos · sem compromisso</span>
+        <h3 class="t-h4 mb-6">O que acontece na sessão</h3>
+        <ul class="agenda">
+          <li>
+            <span class="a-n">01</span>
+            <div><strong>Você desenha o funil atual</strong>
+              <span class="a-d">Por onde entra a demanda, quem toca cada etapa e onde o processo trava hoje.</span></div>
+          </li>
+          <li>
+            <span class="a-n">02</span>
+            <div><strong>A gente aponta os gargalos</strong>
+              <span class="a-d">Geralmente são um ou dois pontos específicos, e nem sempre estão onde você imagina.</span></div>
+          </li>
+          <li>
+            <span class="a-n">03</span>
+            <div><strong>Mapeamos as oportunidades de IA</strong>
+              <span class="a-d">O que dá para automatizar agora, o que dá depois e o que não vale a pena automatizar.</span></div>
+          </li>
+          <li>
+            <span class="a-n">04</span>
+            <div><strong>Você decide sem pressa</strong>
+              <span class="a-d">A proposta com escopo, prazo e preço fechado chega por escrito depois. Nada é decidido na chamada.</span></div>
+          </li>
+        </ul>
+
+        <div class="mt-8 pt-6" style="border-top:1px solid var(--line-soft);position:relative;z-index:2">
+          <p class="t-helper">
+            Prefere resolver por e-mail? <span class="ph">aqui o e-mail de contato</span>
+          </p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= RODAPÉ ======================= -->
+<footer class="sec sec--navy" style="padding-block:clamp(56px,7vw,88px)">
+  <div class="sec-inner">
+    <div class="foot-grid">
+      <div class="foot-col">
+        <a class="brand mb-5" href="#topo">
+          <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+          <span class="brand-word">CINNAMON<span class="brand-thin"> SERVICES</span></span>
+        </a>
+        <p class="t-body-sm mb-6" style="color:var(--muted);max-width:38ch">
+          Implementamos sistemas de IA e automação que geram demanda, fecham negócios
+          e escalam operação — do mapeamento ao sistema em produção.
+        </p>
+        <a class="btn-outline" href="#contato">Agendar sessão gratuita <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+      </div>
+
+      <div class="foot-col">
+        <h4>Serviços</h4>
+        <ul>
+          <li><a href="#servicos">Automação com IA</a></li>
+          <li><a href="#servicos">Geração de leads com IA</a></li>
+          <li><a href="#servicos">Agentes de IA sob medida</a></li>
+          <li><a href="#servicos">CRM e automação de vendas</a></li>
+          <li><a href="#servicos">Workshops de IA</a></li>
+        </ul>
+      </div>
+
+      <div class="foot-col">
+        <h4>Empresa</h4>
+        <ul>
+          <li><a href="#porque">Por que a Cinnamon</a></li>
+          <li><a href="#cases">Cases</a></li>
+          <li><a href="#time">Time</a></li>
+          <li><a href="#processo">Processo</a></li>
+          <li><a href="#perguntas">Perguntas</a></li>
+        </ul>
+      </div>
+
+      <div class="foot-col">
+        <h4>Contato</h4>
+        <ul>
+          <!-- TODO (conteúdo): trocar pelos canais reais da Cinnamon -->
+          <li><a href="#contato">Agendar conversa <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i></a></li>
+          <li><a href="#contato"><span class="ph">e-mail</span></a></li>
+          <li><a href="#contato"><span class="ph">LinkedIn</span></a></li>
+          <li><a href="#contato"><span class="ph">Instagram</span></a></li>
+          <li><a href="#contato"><span class="ph">YouTube</span></a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="foot-bottom">
+      <p class="t-caption">© 2026 · Cinnamon Services</p>
+      <div class="flex flex-wrap items-center gap-7">
+        <a class="btn-ghost" href="#topo">Voltar ao topo</a>
+      </div>
+    </div>
+
+    <div class="marquee mt-9 pt-7" style="border-top:1px solid var(--line-soft)">
+      <div class="marquee-track">
+        <span>Automação com IA</span><span>Agentes sob medida</span><span>Geração de leads</span><span>CRM e vendas</span><span>Workshops</span><span>Preço fechado</span><span>Sistemas em produção</span>
+        <span>Automação com IA</span><span>Agentes sob medida</span><span>Geração de leads</span><span>CRM e vendas</span><span>Workshops</span><span>Preço fechado</span><span>Sistemas em produção</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<button class="float-top" id="floatTop" aria-label="Voltar ao topo" onclick="scrollToTarget(0)">
+  <i data-lucide="arrow-up" class="w-5 h-5"></i>
+</button>
+
+<div id="toast" style="position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);z-index:9200;
+  opacity:0;pointer-events:none;transition:all .4s var(--ease-spring);
+  background:var(--navy-3);border:1px solid rgba(76,126,243,.4);border-radius:999px;padding:10px 20px;
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:#fff;box-shadow:var(--sh-2)">
+  copiado
+</div>
+
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
+</script>
+
+<script src="assets/js/cinnamon.js"></script>
+<script src="assets/js/site.js"></script>
+<script type="module" src="assets/js/hero-specimen.js"></script>
+
+</body>
+</html>
