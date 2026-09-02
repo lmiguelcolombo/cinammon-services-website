@@ -1,0 +1,33 @@
+# Cinnamon Services
+
+> Consultoria e desenvolvimento de sistemas de IA e automação para empresas. Base em Canela/RS, atendendo Gramado, a Serra Gaúcha e todo o Brasil. Do mapeamento do funil ao sistema rodando em produção — com preço fechado por projeto.
+
+Cinnamon Services (razão social: 57.697.808 Luís Miguel Colombo, CNPJ 57.697.808/0001-97) é uma empresa de IA aplicada sediada em Canela, Rio Grande do Sul. Constrói sistemas que geram leads, fecham negócios e escalam operação para empresas B2B, com atendimento presencial na Serra Gaúcha (Canela, Gramado, Nova Petrópolis) e remoto em todo o Brasil.
+
+## Serviços
+
+- **Automação com IA**: tarefas repetitivas viram fluxo automático, com validação humana onde importa (triagem de documentos, atualização de status, relatórios recorrentes).
+- **Geração de leads com IA**: prospecção que encontra, enriquece e prioriza contatos, entregando ao comercial com contexto (listas enriquecidas, cadências personalizadas, scoring de intenção).
+- **Agentes de IA sob medida**: agentes construídos para o processo do cliente, com regras e limites próprios (recepção, triagem, suporte interno, copiloto de operação).
+- **CRM e automação de vendas**: registro automático, follow-up no tempo certo e visibilidade real do pipeline (integração com CRM, higienização de base).
+- **Workshops de IA**: treinamento prático para o time resolver problemas reais com IA.
+
+## Como trabalha
+
+- Passo 1 — Mapa do funil: sessão gratuita de 30 minutos para achar o gargalo.
+- Passo 2 — Proposta: escopo, prazo e preço fechado antes de assinar.
+- Passo 3 — Projeto: construção, teste e produção com atualização semanal.
+- Passo 4 — Gestão contínua (opcional): retainer para monitorar e evoluir o sistema.
+
+## Diferenciais
+
+- Preço fechado por projeto, não por hora.
+- Time pequeno e sênior; o cliente fala com quem constrói.
+- O sistema entregue fica na infraestrutura do cliente, com documentação.
+
+## Contato
+
+- Site: https://cinammonservices.com/
+- E-mail: lmiguelcolombo@gmail.com
+- WhatsApp: +55 54 98438-4244
+- Endereço: Av. das Américas, 357 — Palace Hotel, Canela/RS, CEP 95680-534
