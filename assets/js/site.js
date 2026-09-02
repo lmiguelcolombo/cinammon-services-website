@@ -25,6 +25,8 @@
   }
 
   toggle.addEventListener('click', ()=> setOpen(!drawer.classList.contains('open')));
+  const closeBtn = drawer.querySelector('.drawer-close');
+  if(closeBtn) closeBtn.addEventListener('click', ()=> setOpen(false));
   drawer.querySelectorAll('a').forEach(a=> a.addEventListener('click', ()=> setOpen(false)));
   document.addEventListener('keydown', e=>{
     if(e.key === 'Escape' && drawer.classList.contains('open')) setOpen(false);

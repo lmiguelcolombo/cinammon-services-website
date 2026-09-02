@@ -48,6 +48,13 @@
 .nav-drawer a:hover{color:var(--azure-300);padding-left:10px}
 .nav-drawer a span{font-family:var(--mono);font-size:.62rem;letter-spacing:.2em;color:var(--faint)}
 .nav-drawer .drawer-foot{margin-top:auto;padding-top:28px;display:flex;flex-direction:column;gap:16px}
+.drawer-close{
+  position:absolute;top:clamp(20px,3.4vh,30px);right:clamp(20px,6vw,48px);
+  width:44px;height:44px;border-radius:12px;border:1px solid var(--line);
+  background:rgba(17,26,43,.5);color:var(--text);cursor:pointer;display:grid;place-items:center;
+  transition:all var(--d-base) var(--ease)
+}
+.drawer-close:hover{border-color:var(--azure);color:#fff}
 body.nav-open{overflow:hidden}
 
 /* ---------------------------------------------------------------
